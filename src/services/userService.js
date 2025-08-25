@@ -8,4 +8,10 @@ export const userService = {
   getInfoUser: () => {
     return axiosCustom.post("/QuanLyNguoiDung/ThongTinTaiKhoan");
   },
+  updateInfoUser: (infoUser) => {
+    return axiosCustom.put(
+      "/QuanLyNguoiDung/CapNhatThongTinNguoiDung",
+      infoUser
+    );
+  },
 };

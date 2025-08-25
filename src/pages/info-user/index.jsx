@@ -19,6 +19,12 @@ const shema = yup.object({
       "Số điện thoại không đúng định dạng"
     )
     .required("Không được bỏ trống"),
+  matKhau: yup.string().required("Không được bỏ trống"),
+  email: yup
+    .string()
+    .email("Email không hợp lệ")
+    .required("Không được bỏ trống"),
+  maLoaiNguoiDung: yup.string().required("Không được bỏ trống"),
 });
 
 const UserInforPage = () => {
@@ -42,6 +48,7 @@ const UserInforPage = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(shema),
@@ -55,14 +62,31 @@ const UserInforPage = () => {
     },
   });
 
-  const handleSubmitValueForm = (dataForm) => {
+  const handleSubmitValueForm = async (dataForm) => {
     console.log("dataForm", dataForm);
+
+    try {
+      await userService.updateInfoUser({ ...dataForm, maNhom: "GP00" });
+    } catch (error) {
+      console.error("Error updating user info:", error);
+    }
   };
 
   const fetchInfoUser = async () => {
     try {
       const respone = await userService.getInfoUser();
       console.log("respone", respone);
+      const { email, hoTen, maLoaiNguoiDung, maNhom, matKhau, soDT, taiKhoan } =
+        respone.data.content;
+
+      reset({
+        taiKhoan,
+        matKhau,
+        hoTen,
+        email,
+        soDT,
+        maLoaiNguoiDung,
+      });
     } catch (error) {
       console.error("Error fetching info user:", error);
     }
@@ -70,7 +94,7 @@ const UserInforPage = () => {
 
   useEffect(() => {
     fetchInfoUser();
-  });
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center">
