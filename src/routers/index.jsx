@@ -6,6 +6,7 @@ import RegisterPage from "../pages/register";
 import AuthTemplate from "../template/AuthTemplate";
 import HomeTemplate from "../template/HomeTemplate";
 import AuthCheck from "../HOC/AuthCheck";
+import UserInforPage from "../pages/info-user";
 
 const routers = [
   {
@@ -21,6 +22,14 @@ const routers = [
         element: (
           <AuthCheck isNeedLogin={true}>
             <MovieDetailPage />
+          </AuthCheck>
+        ),
+      },
+      {
+        path: "/info",
+        element: (
+          <AuthCheck isNeedLogin={true}>
+            <UserInforPage />
           </AuthCheck>
         ),
       },

@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setInfoUserAction } from "../../stores/user";
 import { keysLocalStorage, localStorageUtil } from "../../util/localStorage";
 import { Navigate, useNavigate } from "react-router-dom";
+import Lottie from "lottie-react";
+import MovieIconAnimation from "../../asset/MovieIcon.json";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -49,42 +51,50 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-2xl">
-      <h3 className="text-2xl font-bold">Form Login</h3>
+    <div className="bg-white p-8 rounded-2xl flex items-center">
+      {/* icon */}
+      <div className="w-60 ">
+        <Lottie animationData={MovieIconAnimation} />
+      </div>
 
-      {/* form login ant design */}
-      <Form
-        name="basic"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="Username"
-          name="taiKhoan"
-          rules={[{ required: true, message: "Please input your username!" }]}
+      <div>
+        <h3 className="text-2xl font-bold">Form Login</h3>
+
+        {/* form login ant design */}
+
+        <Form
+          name="basic"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          style={{ maxWidth: 600 }}
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
         >
-          <Input />
-        </Form.Item>
+          <Form.Item
+            label="Username"
+            name="taiKhoan"
+            rules={[{ required: true, message: "Please input your username!" }]}
+          >
+            <Input />
+          </Form.Item>
 
-        <Form.Item
-          label="Password"
-          name="matkhau"
-          rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Input.Password />
-        </Form.Item>
+          <Form.Item
+            label="Password"
+            name="matkhau"
+            rules={[{ required: true, message: "Please input your password!" }]}
+          >
+            <Input.Password />
+          </Form.Item>
 
-        <Form.Item label={null}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item label={null}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     </div>
   );
 };
