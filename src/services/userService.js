@@ -4,4 +4,8 @@ export const userService = {
   login: (infoUser) => {
     return axiosCustom.post("QuanLyNguoiDung/DangNhap", infoUser);
   },
+
+  getInfoUser: () => {
+    return axiosCustom.post("/QuanLyNguoiDung/ThongTinTaiKhoan");
+  },
 };

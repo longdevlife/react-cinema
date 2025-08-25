@@ -1,7 +1,6 @@
-import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { axiosCustom } from "../../../services/config";
+
 import { setListMovieAction } from "../../../stores/movie";
 import { movieService } from "../../../services/movieService";
 import { Card } from "antd";
