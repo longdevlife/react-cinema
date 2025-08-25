@@ -7,6 +7,8 @@ import AuthTemplate from "../template/AuthTemplate";
 import HomeTemplate from "../template/HomeTemplate";
 import AuthCheck from "../HOC/AuthCheck";
 import UserInforPage from "../pages/info-user";
+import AdminTemplate from "../template/AdminTemplate";
+import AdminHomepage from "../pages/admin/home";
 
 const routers = [
   {
@@ -55,6 +57,16 @@ const routers = [
             <RegisterPage />,
           </AuthCheck>
         ),
+      },
+    ],
+  },
+  {
+    element: <AdminTemplate />,
+    path: "/admin",
+    child: [
+      {
+        path: "",
+        element: <AdminHomepage />,
       },
     ],
   },
