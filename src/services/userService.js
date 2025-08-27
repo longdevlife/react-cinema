@@ -14,4 +14,14 @@ export const userService = {
       infoUser
     );
   },
+
+  getListUser: () => {
+    return axiosCustom.get("/QuanLyNguoiDung/LayDanhSachNguoiDung");
+  },
+
+  deleteUser: (taiKhoan) => {
+    return axiosCustom.delete(
+      `/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=${taiKhoan}`
+    );
+  },
 };
