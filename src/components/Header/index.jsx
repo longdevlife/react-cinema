@@ -7,19 +7,20 @@ import { useNavigate } from "react-router-dom";
 const HeaderPage = () => {
   const navigate = useNavigate();
   const { isDesktop, isTablet, isMobile } = useResponsive();
+  
   return (
-    <div className="px-3 py-6 bg-black flex justify-between">
-      <div
-        onClick={() => {
-          navigate("/");
-        }}
-        className="text-white text-2xl font-bold cursor-pointer"
-      >
-        LONG CINEMA
+    <div className="bg-black shadow-lg sticky top-0 z-50">
+      <div className="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">
+        <div
+          onClick={() => navigate("/")}
+          className="text-red-600 text-2xl lg:text-3xl font-bold cursor-pointer hover:text-red-500 transition-colors"
+        >
+          GALAXY CINEMA
+        </div>
+        {isDesktop && <NavBarDesktopTablet />}
+        {isTablet && <NavBarDesktopTablet />}
+        {isMobile && <NavBarMobile />}
       </div>
-      {isDesktop && <NavBarDesktopTablet />}
-      {isTablet && <NavBarDesktopTablet />}
-      {isMobile && <NavBarMobile />}
     </div>
   );
 };

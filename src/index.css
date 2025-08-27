@@ -1,1 +1,112 @@
 @import "tailwindcss";
+
+/* Custom styles for Galaxy Cinema theme */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.6;
+}
+
+/* Hero Carousel Styles */
+.hero-carousel .ant-carousel .ant-carousel-dots {
+  bottom: 30px;
+}
+
+.hero-carousel .ant-carousel .ant-carousel-dots li button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.hero-carousel .ant-carousel .ant-carousel-dots li.ant-carousel-dots-active button {
+  background: #dc2626;
+}
+
+/* Movie Card Hover Effects */
+.movie-card {
+  transition: all 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* News Card Styles */
+.news-card img {
+  transition: transform 0.3s ease;
+}
+
+.news-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Cinema Tabs */
+.cinema-tabs .ant-tabs-tab {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.cinema-tabs .ant-tabs-tab-active {
+  color: #dc2626 !important;
+}
+
+.cinema-tabs .ant-tabs-ink-bar {
+  background: #dc2626;
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Custom button styles */
+.ant-btn-primary {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.ant-btn-primary:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-carousel .ant-carousel-dots {
+    bottom: 20px;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dc2626;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b91c1c;
+}

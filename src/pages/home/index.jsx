@@ -1,24 +1,30 @@
 import React from "react";
 import CarouselMovie from "./components/CarouselMovie";
 import ListMovie from "./components/ListMovie";
+import NewsSection from "./components/NewsSection";
+import CinemaSystem from "./components/CinemaSystem";
 import Section from "../../HOC/Section";
 
-
 const HomePage = () => {
-  
   return (
-    <div>
+    <div className="bg-gray-50">
+      {/* Hero Carousel */}
       <CarouselMovie />
 
-      <Section titleSection={"Danh sách phim"}>
+      {/* Movies Section */}
+      <Section titleSection="PHIM HAY">
         <ListMovie />
       </Section>
 
-      <Section titleSection={"Lịch chiếu phim"}>
-        <div className="bg-amber-300 h-96"></div>
+      {/* Cinema System */}
+      <Section titleSection="HỆ THỐNG RạP">
+        <CinemaSystem />
       </Section>
 
-      <div className="h-20 bg-black lg:bg-yellow-300 md:bg-red-600"></div>
+      {/* News Section */}
+      <Section titleSection="TIN TỨC & KHUYẾN MÃI">
+        <NewsSection />
+      </Section>
     </div>
   );
 };
