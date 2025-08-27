@@ -7,32 +7,23 @@ const CarouselMovie = () => {
     {
       id: 1,
       title: "VENOM: THE LAST DANCE",
-      description: "Cuộc phiêu lưu cuối cùng của Eddie Brock và Venom trong hành trình đầy kịch tính",
-      image: "https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600&fit=crop",
-      trailer: "#",
-      genre: "Hành động, Khoa học viễn tưởng",
-      duration: "109 phút",
-      rating: "T16"
+      description: "Cuộc phiêu lưu cuối cùng của Eddie Brock và Venom",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&h=600&fit=crop",
+      trailer: "#"
     },
     {
       id: 2,
       title: "TRANSFORMERS ONE",
-      description: "Câu chuyện khởi nguồn chưa từng được kể về Optimus Prime và Megatron",
-      image: "https://images.pexels.com/photos/7991225/pexels-photo-7991225.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600&fit=crop",
-      trailer: "#",
-      genre: "Hoạt hình, Hành động",
-      duration: "104 phút", 
-      rating: "T13"
+      description: "Câu chuyện khởi nguồn của những robot biến hình",
+      image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=600&fit=crop",
+      trailer: "#"
     },
     {
       id: 3,
       title: "JOKER: FOLIE À DEUX",
-      description: "Arthur Fleck bị giam giữ tại bệnh viện tâm thần Arkham và gặp tình yêu đời mình",
-      image: "https://images.pexels.com/photos/7991580/pexels-photo-7991580.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600&fit=crop",
-      trailer: "#",
-      genre: "Tâm lý, Nhạc kịch",
-      duration: "138 phút",
-      rating: "T18"
+      description: "Sự trở lại của Joker trong một câu chuyện mới",
+      image: "https://images.unsplash.com/photo-1489599162810-1e666d2c8e5b?w=1200&h=600&fit=crop",
+      trailer: "#"
     }
   ];
 
@@ -43,33 +34,25 @@ const CarouselMovie = () => {
         dots={true}
         effect="fade"
         className="hero-carousel"
-        autoplaySpeed={5000}
       >
         {featuredMovies.map((movie) => (
           <div key={movie.id} className="relative">
             <div 
-              className="h-[400px] md:h-[500px] lg:h-[600px] bg-cover bg-center relative"
+              className="h-[500px] lg:h-[600px] bg-cover bg-center relative"
               style={{
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url(${movie.image})`
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(${movie.image})`
               }}
             >
               <div className="absolute inset-0 flex items-center">
                 <div className="container mx-auto px-4 lg:px-8">
-                  <div className="max-w-3xl text-white">
-                    <div className="mb-4">
-                      <span className="bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold mr-3">
-                        {movie.rating}
-                      </span>
-                      <span className="text-gray-300">{movie.genre}</span>
-                    </div>
-                    <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+                  <div className="max-w-2xl text-white">
+                    <h1 className="text-3xl lg:text-5xl font-bold mb-4 leading-tight">
                       {movie.title}
                     </h1>
-                    <p className="text-base md:text-lg lg:text-xl mb-2 opacity-90 max-w-2xl">
+                    <p className="text-lg lg:text-xl mb-6 opacity-90">
                       {movie.description}
                     </p>
-                    <p className="text-gray-300 mb-6">Thời lượng: {movie.duration}</p>
-                    <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex gap-4">
                       <Button 
                         type="primary" 
                         size="large"
@@ -82,7 +65,7 @@ const CarouselMovie = () => {
                         icon={<PlayCircleOutlined />}
                         className="border-white text-white hover:bg-white hover:text-black px-8 py-6 h-auto text-lg"
                       >
-                        XEM TRAILER
+                        TRAILER
                       </Button>
                     </div>
                   </div>
