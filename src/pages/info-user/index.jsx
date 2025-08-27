@@ -67,6 +67,8 @@ const UserInforPage = () => {
 
     try {
       await userService.updateInfoUser({ ...dataForm, maNhom: "GP00" });
+      // gọi lại api lấy thông tin người dùng
+      // lấy thông tin người dùng => lưu lên store , lưu xuống localStorage
     } catch (error) {
       console.error("Error updating user info:", error);
     }

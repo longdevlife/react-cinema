@@ -5,7 +5,7 @@ import MovieDetailPage from "../pages/movie-detail";
 import RegisterPage from "../pages/register";
 import AuthTemplate from "../template/AuthTemplate";
 import HomeTemplate from "../template/HomeTemplate";
-import AuthCheck from "../HOC/AuthCheck";
+import AuthCheck, { roleUser } from "../HOC/AuthCheck";
 import UserInforPage from "../pages/info-user";
 import AdminTemplate from "../template/AdminTemplate";
 import AdminHomepage from "../pages/admin/home";
@@ -17,7 +17,11 @@ const routers = [
     child: [
       {
         path: "",
-        element: <HomePage />,
+        element: (
+          <AuthCheck>
+            <HomePage />
+          </AuthCheck>
+        ),
       },
       {
         path: "/detail/:movieId",
@@ -66,7 +70,11 @@ const routers = [
     child: [
       {
         path: "",
-        element: <AdminHomepage />,
+        element: (
+          <AuthCheck isNeedLogin={true} pagePermission={roleUser.ADMIN}>
+            <AdminHomepage />
+          </AuthCheck>
+        ),
       },
     ],
   },
