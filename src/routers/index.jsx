@@ -9,6 +9,7 @@ import AuthCheck, { roleUser } from "../HOC/AuthCheck";
 import UserInforPage from "../pages/info-user";
 import AdminTemplate from "../template/AdminTemplate";
 import AdminHomepage from "../pages/admin/home";
+import MovieAdminPage from "../pages/admin/movie";
 
 const routers = [
   {
@@ -73,6 +74,14 @@ const routers = [
         element: (
           <AuthCheck isNeedLogin={true} pagePermission={roleUser.ADMIN}>
             <AdminHomepage />
+          </AuthCheck>
+        ),
+      },
+      {
+        path: "movie",
+        element: (
+          <AuthCheck isNeedLogin={true} pagePermission={roleUser.ADMIN}>
+            <MovieAdminPage />
           </AuthCheck>
         ),
       },

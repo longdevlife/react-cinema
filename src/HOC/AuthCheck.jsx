@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 export const roleUser = {
   ADMIN: "quanTri",
@@ -11,7 +11,14 @@ const AuthCheck = ({ children, isNeedLogin, pagePermission }) => {
   const { infoUser } = useSelector((state) => state.userSlice);
 
   // trường hợp mã loại người dùng là admin thì đá về trang admin =>
-  if (infoUser?.maLoaiNguoiDung === roleUser.ADMIN && infoUser) {
+
+  const location = useLocation();
+  // nếu user là admin và đang ở trang khác ngoài admin thì sẽ chuyển hướng về trang admin , còn nếu đang ở trang admin thì sẽ bỏ qua điều kiện này
+  if (
+    infoUser?.maLoaiNguoiDung === roleUser.ADMIN &&
+    infoUser &&
+    !location.pathname.startsWith("/admin")
+  ) {
     return <Navigate to="/admin" replace />;
   }
 
