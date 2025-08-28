@@ -18,11 +18,7 @@ const routers = [
     child: [
       {
         path: "",
-        element: (
-          <AuthCheck>
-            <HomePage />
-          </AuthCheck>
-        ),
+        element: <HomePage />,
       },
       {
         path: "/detail/:movieId",
