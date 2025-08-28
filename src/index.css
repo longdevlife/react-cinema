@@ -1,1 +1,141 @@
 @import "tailwindcss";
+
+/* Banner Carousel Styles */
+.banner-carousel .slick-dots {
+  bottom: 30px !important;
+  z-index: 20;
+}
+
+.banner-carousel .slick-dots li {
+  margin: 0 4px;
+}
+
+.banner-carousel .slick-dots li button {
+  width: 12px !important;
+  height: 12px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.4) !important;
+  border: 2px solid rgba(255, 255, 255, 0.6) !important;
+}
+
+.banner-carousel .slick-dots li.slick-active button {
+  background: #dc2626 !important;
+  border-color: #dc2626 !important;
+  transform: scale(1.2);
+}
+
+.banner-carousel .slick-arrow {
+  z-index: 20 !important;
+  width: 60px !important;
+  height: 60px !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-radius: 50% !important;
+  transition: all 0.3s ease !important;
+}
+
+.banner-carousel .slick-arrow:hover {
+  background: rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.1);
+}
+
+.banner-carousel .slick-arrow:before {
+  font-size: 24px !important;
+  color: white !important;
+  opacity: 1 !important;
+}
+
+.banner-carousel .slick-prev {
+  left: 30px !important;
+}
+
+.banner-carousel .slick-next {
+  right: 30px !important;
+}
+
+/* Movie Card Styles */
+.movie-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Movie Tabs Styles */
+.movie-tabs .ant-tabs-nav {
+  margin-bottom: 2rem;
+}
+
+.movie-tabs .ant-tabs-tab {
+  font-size: 18px;
+  font-weight: 600;
+  padding: 12px 24px;
+}
+
+.movie-tabs .ant-tabs-tab-active {
+  color: #dc2626 !important;
+}
+
+.movie-tabs .ant-tabs-ink-bar {
+  background: #dc2626;
+  height: 3px;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Ant Design component overrides */
+.ant-card {
+  border-radius: 12px;
+}
+
+.ant-card-cover img {
+  transition: transform 0.5s ease;
+}
+
+.ant-rate {
+  font-size: 14px;
+}
+
+.ant-btn-primary {
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+.ant-btn-primary:hover {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* Header Styles */
+.header-transparent {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+}
+
+.header-solid {
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(12px);
+}
+
+/* Add padding to body to account for fixed header */
+body {
+  padding-top: 80px;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .banner-carousel .slick-arrow {
+    display: none !important;
+  }
+
+  .banner-carousel .slick-dots {
+    bottom: 20px !important;
+  }
+
+  body {
+    padding-top: 70px;
+  }
+}

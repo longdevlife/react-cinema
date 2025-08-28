@@ -8,4 +8,8 @@ export const movieService = {
   getMovieDetail: (movieId) => {
     return axiosCustom.get(`/QuanLyPhim/LayThongTinPhim?MaPhim=${movieId}`);
   },
+
+  getBannerList: async () => {
+    return axiosCustom.get("/QuanLyPhim/LayDanhSachBanner");
+  },
 };
