@@ -25,7 +25,7 @@ const AuthCheck = ({ children, isNeedLogin, pagePermission }) => {
   if (
     infoUser?.maLoaiNguoiDung === roleUser.USER &&
     infoUser &&
-    pagePermission === "quanTri"
+    pagePermission === roleUser.ADMIN
   ) {
     return <Navigate to="/" replace />;
   }
