@@ -1,55 +1,30 @@
 @import "tailwindcss";
 
-/* Banner Carousel Styles */
-.banner-carousel .slick-dots {
-  bottom: 30px !important;
-  z-index: 20;
+/* Hero Carousel Styles */
+.hero-carousel .slick-dots {
+  bottom: 20px;
 }
 
-.banner-carousel .slick-dots li {
-  margin: 0 4px;
+.hero-carousel .slick-dots li button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
 }
 
-.banner-carousel .slick-dots li button {
-  width: 12px !important;
-  height: 12px !important;
-  border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.4) !important;
-  border: 2px solid rgba(255, 255, 255, 0.6) !important;
+.hero-carousel .slick-dots li.slick-active button {
+  background: #fff;
 }
 
-.banner-carousel .slick-dots li.slick-active button {
-  background: #dc2626 !important;
-  border-color: #dc2626 !important;
-  transform: scale(1.2);
+.hero-carousel .slick-arrow {
+  z-index: 10;
+  width: 50px;
+  height: 50px;
 }
 
-.banner-carousel .slick-arrow {
-  z-index: 20 !important;
-  width: 60px !important;
-  height: 60px !important;
-  background: rgba(0, 0, 0, 0.5) !important;
-  border-radius: 50% !important;
-  transition: all 0.3s ease !important;
-}
-
-.banner-carousel .slick-arrow:hover {
-  background: rgba(0, 0, 0, 0.8) !important;
-  transform: scale(1.1);
-}
-
-.banner-carousel .slick-arrow:before {
-  font-size: 24px !important;
-  color: white !important;
-  opacity: 1 !important;
-}
-
-.banner-carousel .slick-prev {
-  left: 30px !important;
-}
-
-.banner-carousel .slick-next {
-  right: 30px !important;
+.hero-carousel .slick-arrow:before {
+  font-size: 24px;
+  color: white;
 }
 
 /* Movie Card Styles */
@@ -110,32 +85,9 @@
   border-color: #b91c1c;
 }
 
-/* Header Styles */
-.header-transparent {
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
-}
-
-.header-solid {
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(12px);
-}
-
-/* Add padding to body to account for fixed header */
-body {
-  padding-top: 80px;
-}
-
 /* Responsive utilities */
 @media (max-width: 768px) {
-  .banner-carousel .slick-arrow {
+  .hero-carousel .slick-arrow {
     display: none !important;
-  }
-
-  .banner-carousel .slick-dots {
-    bottom: 20px !important;
-  }
-
-  body {
-    padding-top: 70px;
   }
 }
