@@ -12,25 +12,25 @@ const RegisterPage = () => {
   const onFinish = async (values) => {
     try {
       console.log("Register values:", values);
-      
-      // Chuẩn bị data theo format API yêu cầu
+
       const registerData = {
         taiKhoan: values.taiKhoan,
         matKhau: values.matKhau,
         email: values.email,
-        soDt: values.soDT, // Chú ý: API dùng soDt không phải soDT
-        maNhom: "GP01", // Mã nhóm cố định
-        hoTen: values.hoTen
+        soDt: values.soDT,
+        maNhom: "GP01",
+        hoTen: values.hoTen,
       };
-      
+
       const response = await userService.register(registerData);
       console.log("Register response:", response);
-      
+
       message.success("Đăng ký thành công! Vui lòng đăng nhập.");
       navigate("/login");
     } catch (error) {
       console.error("Register failed:", error);
-      const errorMessage = error.response?.data?.content || "Đăng ký thất bại! Vui lòng thử lại.";
+      const errorMessage =
+        error.response?.data?.content || "Đăng ký thất bại! Vui lòng thử lại.";
       message.error(errorMessage);
     }
   };
@@ -46,8 +46,12 @@ const RegisterPage = () => {
         <div className="w-full lg:w-1/2 p-8 lg:p-12">
           <div className="max-w-md mx-auto">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Tạo tài khoản</h1>
-              <p className="text-gray-600">Tham gia cùng Long Cinema ngay hôm nay</p>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Tạo tài khoản
+              </h1>
+              <p className="text-gray-600">
+                Tham gia cùng Long Cinema ngay hôm nay
+              </p>
             </div>
 
             <Form
@@ -60,29 +64,33 @@ const RegisterPage = () => {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Form.Item
-                  label={<span className="text-gray-700 font-medium">Họ tên</span>}
+                  label={
+                    <span className="text-gray-700 font-medium">Họ tên</span>
+                  }
                   name="hoTen"
                   rules={[
                     { required: true, message: "Vui lòng nhập họ tên!" },
-                    { min: 2, message: "Họ tên phải có ít nhất 2 ký tự!" }
+                    { min: 2, message: "Họ tên phải có ít nhất 2 ký tự!" },
                   ]}
                 >
-                  <Input 
+                  <Input
                     placeholder="Nhập họ tên"
                     className="rounded-xl border-gray-300 hover:border-purple-400 focus:border-purple-500"
                   />
                 </Form.Item>
 
                 <Form.Item
-                  label={<span className="text-gray-700 font-medium">Tài khoản</span>}
+                  label={
+                    <span className="text-gray-700 font-medium">Tài khoản</span>
+                  }
                   name="taiKhoan"
                   rules={[
                     { required: true, message: "Vui lòng nhập tài khoản!" },
                     { min: 3, message: "Tài khoản phải có ít nhất 3 ký tự!" },
-                    { max: 20, message: "Tài khoản không được quá 20 ký tự!" }
+                    { max: 20, message: "Tài khoản không được quá 20 ký tự!" },
                   ]}
                 >
-                  <Input 
+                  <Input
                     placeholder="Nhập tài khoản"
                     className="rounded-xl border-gray-300 hover:border-purple-400 focus:border-purple-500"
                   />
@@ -94,10 +102,10 @@ const RegisterPage = () => {
                 name="email"
                 rules={[
                   { required: true, message: "Vui lòng nhập email!" },
-                  { type: "email", message: "Email không hợp lệ!" }
+                  { type: "email", message: "Email không hợp lệ!" },
                 ]}
               >
-                <Input 
+                <Input
                   placeholder="Nhập địa chỉ email"
                   className="rounded-xl border-gray-300 hover:border-purple-400 focus:border-purple-500"
                 />
@@ -105,28 +113,37 @@ const RegisterPage = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Form.Item
-                  label={<span className="text-gray-700 font-medium">Số điện thoại</span>}
+                  label={
+                    <span className="text-gray-700 font-medium">
+                      Số điện thoại
+                    </span>
+                  }
                   name="soDT"
                   rules={[
                     { required: true, message: "Vui lòng nhập số điện thoại!" },
-                    { 
-                      pattern: /^(?:\+?84|0)(?:3[2-9]|5[25689]|7(?:0|[6-9])|8[1-9]|9[0-9])\d{7}$/,
-                      message: "Số điện thoại không đúng định dạng!"
-                    }
+                    {
+                      pattern:
+                        /^(?:\+?84|0)(?:3[2-9]|5[25689]|7(?:0|[6-9])|8[1-9]|9[0-9])\d{7}$/,
+                      message: "Số điện thoại không đúng định dạng!",
+                    },
                   ]}
                 >
-                  <Input 
+                  <Input
                     placeholder="Nhập số điện thoại"
                     className="rounded-xl border-gray-300 hover:border-purple-400 focus:border-purple-500"
                   />
                 </Form.Item>
 
                 <Form.Item
-                  label={<span className="text-gray-700 font-medium">Loại người dùng</span>}
+                  label={
+                    <span className="text-gray-700 font-medium">
+                      Loại người dùng
+                    </span>
+                  }
                   name="maLoaiNguoiDung"
                   initialValue="KhachHang"
                 >
-                  <Select 
+                  <Select
                     placeholder="Chọn loại người dùng"
                     className="rounded-xl"
                     disabled
@@ -137,32 +154,42 @@ const RegisterPage = () => {
               </div>
 
               <Form.Item
-                label={<span className="text-gray-700 font-medium">Mật khẩu</span>}
+                label={
+                  <span className="text-gray-700 font-medium">Mật khẩu</span>
+                }
                 name="matKhau"
                 rules={[
                   { required: true, message: "Vui lòng nhập mật khẩu!" },
-                  { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự!" }
+                  { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự!" },
                 ]}
               >
                 <Input.Password
                   placeholder="Nhập mật khẩu"
                   className="rounded-xl border-gray-300 hover:border-purple-400 focus:border-purple-500"
-                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
                 />
               </Form.Item>
 
               <Form.Item
-                label={<span className="text-gray-700 font-medium">Xác nhận mật khẩu</span>}
+                label={
+                  <span className="text-gray-700 font-medium">
+                    Xác nhận mật khẩu
+                  </span>
+                }
                 name="confirmPassword"
-                dependencies={['matKhau']}
+                dependencies={["matKhau"]}
                 rules={[
                   { required: true, message: "Vui lòng xác nhận mật khẩu!" },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (!value || getFieldValue('matKhau') === value) {
+                      if (!value || getFieldValue("matKhau") === value) {
                         return Promise.resolve();
                       }
-                      return Promise.reject(new Error('Mật khẩu xác nhận không khớp!'));
+                      return Promise.reject(
+                        new Error("Mật khẩu xác nhận không khớp!")
+                      );
                     },
                   }),
                 ]}
@@ -170,7 +197,9 @@ const RegisterPage = () => {
                 <Input.Password
                   placeholder="Nhập lại mật khẩu"
                   className="rounded-xl border-gray-300 hover:border-purple-400 focus:border-purple-500"
-                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
                 />
               </Form.Item>
 
@@ -182,7 +211,10 @@ const RegisterPage = () => {
                   className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
                   required
                 />
-                <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-700">
+                <label
+                  htmlFor="agree-terms"
+                  className="ml-2 block text-sm text-gray-700"
+                >
                   Tôi đồng ý với{" "}
                   <a href="#" className="text-purple-600 hover:text-purple-500">
                     Điều khoản dịch vụ
@@ -220,35 +252,11 @@ const RegisterPage = () => {
         </div>
 
         {/* Right Side - Welcome */}
-        <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-purple-600 to-pink-700 p-12 flex-col justify-center items-center text-white relative overflow-hidden">
+        <div
+          className="hidden lg:flex lg:w-1/2 p-12 flex-col justify-center items-center text-white relative overflow-hidden bg-center bg-cover"
+          style={{ backgroundImage: "url('/register-banner.jpg')" }}
+        >
           <div className="absolute inset-0 bg-black opacity-10"></div>
-          <div className="relative z-10 text-center">
-            <div className="mb-8">
-              <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h2 className="text-4xl font-bold mb-4">Tham gia cùng chúng tôi!</h2>
-              <p className="text-xl opacity-90 leading-relaxed">
-                Tạo tài khoản để trải nghiệm dịch vụ tuyệt vời
-              </p>
-            </div>
-            <div className="space-y-4 text-left">
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
-                <span>Đặt vé online dễ dàng</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
-                <span>Nhận thông báo phim mới</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
-                <span>Tích điểm và ưu đãi</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
