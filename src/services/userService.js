@@ -5,6 +5,10 @@ export const userService = {
     return axiosCustom.post("QuanLyNguoiDung/DangNhap", infoUser);
   },
 
+  register: (infoUser) => {
+    return axiosCustom.post("/QuanLyNguoiDung/DangKy", infoUser);
+  },
+
   getInfoUser: () => {
     return axiosCustom.post("/QuanLyNguoiDung/ThongTinTaiKhoan");
   },

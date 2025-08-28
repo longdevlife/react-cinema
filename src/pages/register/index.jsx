@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Form, Input, Select, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { userService } from "../../services/userService";
 
 const { Option } = Select;
 
@@ -11,12 +12,26 @@ const RegisterPage = () => {
   const onFinish = async (values) => {
     try {
       console.log("Register values:", values);
-      // Tạm thời chỉ log ra, chưa có API đăng ký
+      
+      // Chuẩn bị data theo format API yêu cầu
+      const registerData = {
+        taiKhoan: values.taiKhoan,
+        matKhau: values.matKhau,
+        email: values.email,
+        soDt: values.soDT, // Chú ý: API dùng soDt không phải soDT
+        maNhom: "GP01", // Mã nhóm cố định
+        hoTen: values.hoTen
+      };
+      
+      const response = await userService.register(registerData);
+      console.log("Register response:", response);
+      
       message.success("Đăng ký thành công! Vui lòng đăng nhập.");
       navigate("/login");
     } catch (error) {
       console.error("Register failed:", error);
-      message.error("Đăng ký thất bại! Vui lòng thử lại.");
+      const errorMessage = error.response?.data?.content || "Đăng ký thất bại! Vui lòng thử lại.";
+      message.error(errorMessage);
     }
   };
 
@@ -109,14 +124,14 @@ const RegisterPage = () => {
                 <Form.Item
                   label={<span className="text-gray-700 font-medium">Loại người dùng</span>}
                   name="maLoaiNguoiDung"
-                  rules={[{ required: true, message: "Vui lòng chọn loại người dùng!" }]}
+                  initialValue="KhachHang"
                 >
                   <Select 
                     placeholder="Chọn loại người dùng"
                     className="rounded-xl"
+                    disabled
                   >
                     <Option value="KhachHang">Khách hàng</Option>
-                    <Option value="QuanTri">Quản trị</Option>
                   </Select>
                 </Form.Item>
               </div>
