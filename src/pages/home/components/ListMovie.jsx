@@ -3,9 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setListMovieAction } from "../../../stores/movie";
 import { movieService } from "../../../services/movieService";
-import { Card, Rate, Button, Tabs, Badge } from "antd";
+import { Card, Rate, Button, Tabs, Badge, Pagination } from "antd";
 import { useNavigate } from "react-router-dom";
-import { PlayCircleOutlined, CalendarOutlined, HeartOutlined, ShareAltOutlined } from "@ant-design/icons";
+import {
+  PlayCircleOutlined,
+  CalendarOutlined,
+  HeartOutlined,
+  ShareAltOutlined,
+} from "@ant-design/icons";
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -15,6 +20,8 @@ const ListMovie = () => {
   const listMovie = useSelector((state) => state.movieSlice.listMovie);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("dang-chieu");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(8); // Số phim hiển thị trên mỗi trang
 
   const fetchListMovie = async () => {
     try {
@@ -27,7 +34,7 @@ const ListMovie = () => {
 
   useEffect(() => {
     fetchListMovie();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRedirectToDetail = (movieId) => {
     console.log("movieId", movieId);
@@ -35,8 +42,33 @@ const ListMovie = () => {
   };
 
   // Giả lập phân loại phim (vì API không có trường này)
-  const dangChieuMovies = listMovie.slice(0, 8);
-  const sapChieuMovies = listMovie.slice(8, 16);
+  const dangChieuMovies = listMovie.filter((movie, index) => index % 2 === 0);
+  const sapChieuMovies = listMovie.filter((movie, index) => index % 2 === 1);
+
+  // Phân trang cho từng tab
+  const getCurrentMovies = () => {
+    const movies =
+      activeTab === "dang-chieu" ? dangChieuMovies : sapChieuMovies;
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return movies.slice(startIndex, endIndex);
+  };
+
+  const getTotalMovies = () => {
+    return activeTab === "dang-chieu"
+      ? dangChieuMovies.length
+      : sapChieuMovies.length;
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+    setCurrentPage(1); // Reset về trang đầu khi chuyển tab
+  };
 
   const renderMovieGrid = (movies) => {
     return (
@@ -61,7 +93,9 @@ const ListMovie = () => {
                       <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform duration-300">
                         <PlayCircleOutlined className="text-white text-2xl" />
                       </div>
-                      <p className="text-white font-semibold text-lg">Xem trailer</p>
+                      <p className="text-white font-semibold text-lg">
+                        Xem trailer
+                      </p>
                     </div>
                   </div>
 
@@ -78,7 +112,11 @@ const ListMovie = () => {
                   {/* Movie status badges */}
                   <div className="absolute top-4 left-4 flex flex-col gap-2">
                     {movie.hot && (
-                      <Badge.Ribbon text="HOT" color="red" className="transform -translate-x-2">
+                      <Badge.Ribbon
+                        text="HOT"
+                        color="red"
+                        className="transform -translate-x-2"
+                      >
                         <div></div>
                       </Badge.Ribbon>
                     )}
@@ -87,7 +125,7 @@ const ListMovie = () => {
                         Đang chiếu
                       </span>
                     )}
-                    </div>
+                  </div>
 
                   {/* Rating badge */}
                   <div className="absolute bottom-4 left-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-3 py-1 rounded-full text-sm font-bold shadow-lg">
@@ -108,14 +146,25 @@ const ListMovie = () => {
                 </h3>
 
                 <div className="flex items-center justify-between mb-4">
-                  <Rate disabled defaultValue={4} size="small" className="text-yellow-500" />
-                  <span className="text-gray-500 text-sm font-medium">120 phút</span>
+                  <Rate
+                    disabled
+                    defaultValue={4}
+                    size="small"
+                    className="text-yellow-500"
+                  />
+                  <span className="text-gray-500 text-sm font-medium">
+                    120 phút
+                  </span>
                 </div>
 
                 {/* Genre tags */}
                 <div className="flex flex-wrap gap-1 mb-4">
-                  <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">Hành động</span>
-                  <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">Phiêu lưu</span>
+                  <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
+                    Hành động
+                  </span>
+                  <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
+                    Phiêu lưu
+                  </span>
                 </div>
 
                 <div className="space-y-3">
@@ -147,32 +196,76 @@ const ListMovie = () => {
       <div className="mb-12">
         <Tabs
           activeKey={activeTab}
-          onChange={setActiveTab}
+          onChange={handleTabChange}
           centered
           size="large"
           className="movie-tabs custom-tabs"
         >
-          <TabPane 
+          <TabPane
             tab={
               <span className="flex items-center gap-2 px-4 py-2">
                 <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                Đang chiếu
+                Đang chiếu ({dangChieuMovies.length})
               </span>
-            } 
+            }
             key="dang-chieu"
           >
-            {renderMovieGrid(dangChieuMovies)}
+            <div className="space-y-8">
+              {renderMovieGrid(getCurrentMovies())}
+
+              {/* Pagination */}
+              {getTotalMovies() > pageSize && (
+                <div className="flex justify-center mt-8">
+                  <div className="bg-white rounded-2xl p-4 shadow-lg">
+                    <Pagination
+                      current={currentPage}
+                      total={getTotalMovies()}
+                      pageSize={pageSize}
+                      onChange={handlePageChange}
+                      showSizeChanger={false}
+                      showQuickJumper
+                      showTotal={(total, range) =>
+                        `${range[0]}-${range[1]} của ${total} phim`
+                      }
+                      className="custom-pagination"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </TabPane>
-          <TabPane 
+          <TabPane
             tab={
               <span className="flex items-center gap-2 px-4 py-2">
                 <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-                Sắp chiếu
+                Sắp chiếu ({sapChieuMovies.length})
               </span>
-            } 
+            }
             key="sap-chieu"
           >
-            {renderMovieGrid(sapChieuMovies)}
+            <div className="space-y-8">
+              {renderMovieGrid(getCurrentMovies())}
+
+              {/* Pagination */}
+              {getTotalMovies() > pageSize && (
+                <div className="flex justify-center mt-8">
+                  <div className="bg-white rounded-2xl p-4 shadow-lg">
+                    <Pagination
+                      current={currentPage}
+                      total={getTotalMovies()}
+                      pageSize={pageSize}
+                      onChange={handlePageChange}
+                      showSizeChanger={false}
+                      showQuickJumper
+                      showTotal={(total, range) =>
+                        `${range[0]}-${range[1]} của ${total} phim`
+                      }
+                      className="custom-pagination"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </TabPane>
         </Tabs>
       </div>

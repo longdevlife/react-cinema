@@ -6,6 +6,13 @@ export const cinemaService = {
     return axiosCustom.get("/QuanLyRap/LayThongTinHeThongRap");
   },
 
+  // Lấy danh sách cụm rạp theo hệ thống rạp
+  getCinemaComplexList: async (maHeThongRap) => {
+    return axiosCustom.get(
+      `/QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=${maHeThongRap}`
+    );
+  },
+
   // Lấy thông tin lịch chiếu theo hệ thống rạp
   getCinemaShowtimes: async (maHeThongRap) => {
     return axiosCustom.get(

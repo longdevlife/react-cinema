@@ -242,7 +242,7 @@ const RegisterPage = () => {
                 Đã có tài khoản?{" "}
                 <button
                   onClick={() => navigate("/login")}
-                  className="font-semibold text-purple-600 hover:text-purple-500 transition-colors duration-200"
+                  className="font-semibold text-purple-600 hover:text-purple-500 transition-colors duration-200 cursor-pointer"
                 >
                   Đăng nhập ngay
                 </button>

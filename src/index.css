@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Hide scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
 /* Custom animations */
 @keyframes fade-in-up {
   from {
@@ -18,7 +27,8 @@
 
 /* Floating animation */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -32,7 +42,8 @@
 
 /* Pulse glow effect */
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
   }
   50% {
@@ -42,6 +53,49 @@
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Custom Pagination Styles */
+.custom-pagination .ant-pagination-item {
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.custom-pagination .ant-pagination-item:hover {
+  border-color: #ef4444;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.custom-pagination .ant-pagination-item-active {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.custom-pagination .ant-pagination-item-active a {
+  color: white;
+  font-weight: 600;
+}
+
+.custom-pagination .ant-pagination-prev,
+.custom-pagination .ant-pagination-next {
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.custom-pagination .ant-pagination-prev:hover,
+.custom-pagination .ant-pagination-next:hover {
+  border-color: #ef4444;
+  transform: translateY(-2px);
+}
+
+.custom-pagination .ant-pagination-jump-prev,
+.custom-pagination .ant-pagination-jump-next {
+  border-radius: 12px;
 }
 
 /* Hero Carousel Styles */
@@ -203,7 +257,8 @@
 
 /* Smooth transitions for all elements */
 * {
-  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease,
+    border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Cinema Showtimes Styles */
@@ -221,13 +276,18 @@
 }
 
 .movie-item::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -241,7 +301,7 @@
 }
 
 .showtime-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -282,17 +342,17 @@
   .hero-carousel .slick-arrow {
     display: none !important;
   }
-  
+
   .custom-tabs .ant-tabs-tab {
     font-size: 16px;
     padding: 12px 20px;
   }
-  
+
   .cinema-card {
     margin: 0 -1rem;
     border-radius: 24px;
   }
-  
+
   .movie-item {
     padding: 1rem;
   }

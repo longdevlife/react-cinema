@@ -157,7 +157,7 @@ const LoginPage = () => {
                 Chưa có tài khoản?{" "}
                 <button
                   onClick={() => navigate("/register")}
-                  className="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors duration-200"
+                  className="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors duration-200 cursor-pointer"
                 >
                   Đăng ký ngay
                 </button>

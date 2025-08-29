@@ -1,33 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Spin, Button, Empty, Card, Tag, Tooltip } from "antd";
-import { 
-  ClockCircleOutlined, 
-  EnvironmentOutlined, 
-  StarOutlined,
-  CalendarOutlined,
-  PlayCircleOutlined,
-  FireOutlined
-} from "@ant-design/icons";
+import { Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 
 import { cinemaService } from "../../../services/cinemaService";
 import {
   setCinemaSystemListAction,
   setSelectedCinemaSystemAction,
+  setCinemaComplexListAction,
+  setSelectedCinemaComplexAction,
   setCinemaShowtimesAction,
   setLoadingAction,
+  setLoadingComplexAction,
 } from "../../../stores/cinema";
 
 const CinemaShowtimes = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [expandedMovies, setExpandedMovies] = useState(new Set());
-
-  const { cinemaSystemList, selectedCinemaSystem, cinemaShowtimes, loading } =
-    useSelector((state) => state.cinemaSlice);
+  const {
+    cinemaSystemList,
+    selectedCinemaSystem,
+    cinemaComplexList,
+    selectedCinemaComplex,
+    cinemaShowtimes,
+    loadingComplex,
+  } = useSelector((state) => state.cinemaSlice);
 
   // Fetch danh sách hệ thống rạp
   const fetchCinemaSystemList = async () => {
@@ -36,6 +34,21 @@ const CinemaShowtimes = () => {
       dispatch(setCinemaSystemListAction(response.data.content));
     } catch (error) {
       console.error("Error fetching cinema system list:", error);
+    }
+  };
+
+  // Fetch danh sách cụm rạp theo hệ thống rạp
+  const fetchCinemaComplexList = async (cinemaSystemCode) => {
+    dispatch(setLoadingComplexAction(true));
+    try {
+      const response = await cinemaService.getCinemaComplexList(
+        cinemaSystemCode
+      );
+      dispatch(setCinemaComplexListAction(response.data.content));
+    } catch (error) {
+      console.error("Error fetching cinema complex list:", error);
+    } finally {
+      dispatch(setLoadingComplexAction(false));
     }
   };
 
@@ -48,6 +61,9 @@ const CinemaShowtimes = () => {
       );
       dispatch(setCinemaShowtimesAction(response.data.content));
       dispatch(setSelectedCinemaSystemAction(cinemaSystem));
+
+      // Fetch danh sách cụm rạp khi chọn hệ thống rạp
+      await fetchCinemaComplexList(cinemaSystem.maHeThongRap);
     } catch (error) {
       console.error("Error fetching cinema showtimes:", error);
     } finally {
@@ -60,355 +76,197 @@ const CinemaShowtimes = () => {
       await fetchCinemaSystemList();
     };
     initializeData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-select rạp đầu tiên khi có dữ liệu
   useEffect(() => {
     if (cinemaSystemList.length > 0 && !selectedCinemaSystem) {
       fetchCinemaShowtimes(cinemaSystemList[0]);
     }
-  }, [cinemaSystemList, selectedCinemaSystem]);
-
-  // Format thời gian
-  const formatTime = (dateTime) => {
-    return new Date(dateTime).toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  // Format giá tiền
-  const formatPrice = (price) => {
-    return price.toLocaleString("vi-VN") + "đ";
-  };
-
-  // Generate next 7 days for date selector
-  const getNext7Days = () => {
-    const days = [];
-    for (let i = 0; i < 7; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() + i);
-      days.push({
-        date: date.toISOString().split('T')[0],
-        dayName: date.toLocaleDateString('vi-VN', { weekday: 'short' }),
-        dayNumber: date.getDate(),
-        month: date.getMonth() + 1
-      });
-    }
-    return days;
-  };
-
-  const toggleMovieExpansion = (movieId) => {
-    const newExpanded = new Set(expandedMovies);
-    if (newExpanded.has(movieId)) {
-      newExpanded.delete(movieId);
-    } else {
-      newExpanded.add(movieId);
-    }
-    setExpandedMovies(newExpanded);
-  };
-
-  const days = getNext7Days();
+  }, [cinemaSystemList]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Cinema System Selector */}
-      <div className="mb-8">
-        <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <span className="w-6 h-6 bg-gradient-to-r from-red-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm">🎭</span>
-          Chọn hệ thống rạp
-        </h3>
-        <div className="flex flex-wrap gap-4">
-          {cinemaSystemList.map((cinema) => (
-            <button
-              key={cinema.maHeThongRap}
-              className={`group relative overflow-hidden rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
-                selectedCinemaSystem?.maHeThongRap === cinema.maHeThongRap
-                  ? "border-red-500 bg-red-50 shadow-lg shadow-red-500/25"
-                  : "border-gray-200 bg-white hover:border-red-300 hover:shadow-lg"
-              }`}
-              onClick={() => fetchCinemaShowtimes(cinema)}
-            >
-              <div className="p-4 flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-white shadow-sm">
-                  <img
-                    src={cinema.logo}
-                    alt={cinema.tenHeThongRap}
-                    className="w-full h-full object-contain p-1"
-                  />
-                </div>
-                <div className="text-left">
-                  <h4 className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors">
-                    {cinema.tenHeThongRap}
-                  </h4>
-                  <p className="text-xs text-gray-500">Hệ thống rạp</p>
-                </div>
-              </div>
-              {selectedCinemaSystem?.maHeThongRap === cinema.maHeThongRap && (
-                <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-purple-500/10 pointer-events-none"></div>
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
+    <div className="max-w-full mx-auto bg-white rounded-3xl p-10 shadow-lg min-h-screen">
+      <h3 className="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-3">
+        <span className="w-10 h-10 bg-gradient-to-r from-red-500 to-purple-600 rounded-full flex items-center justify-center text-white text-lg">
+          🎭
+        </span>
+        Lịch Chiếu Theo Cụm Rạp
+      </h3>
 
-      {/* Date Selector */}
-      <div className="mb-8">
-        <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <CalendarOutlined className="text-red-500" />
-          Chọn ngày xem
-        </h3>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {days.map((day) => (
-            <button
-              key={day.date}
-              className={`flex-shrink-0 p-4 rounded-2xl border-2 transition-all duration-300 hover:scale-105 min-w-[80px] ${
-                selectedDate === day.date
-                  ? "border-red-500 bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25"
-                  : "border-gray-200 bg-white hover:border-red-300 hover:shadow-md text-gray-700"
-              }`}
-              onClick={() => setSelectedDate(day.date)}
-            >
-              <div className="text-center">
-                <div className="text-xs font-medium opacity-80 mb-1">
-                  {day.dayName}
-                </div>
-                <div className="text-lg font-bold">
-                  {day.dayNumber}
-                </div>
-                <div className="text-xs opacity-80">
-                  Th{day.month}
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Cinema Content */}
-      {!selectedCinemaSystem ? (
-        <div className="flex items-center justify-center h-64 bg-gray-50 rounded-3xl">
-          <div className="text-center text-gray-500">
-            <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ClockCircleOutlined className="text-2xl" />
+      {/* Layout 3 cột */}
+      <div className="grid grid-cols-12 gap-6">
+        {/* Cột 1: Hệ thống rạp - chỉ logo */}
+        <div className="col-span-2">
+          <div className="bg-gray-50 rounded-2xl p-6 shadow-sm border border-gray-200 h-[1000px]">
+            <div className="space-y-4 h-full overflow-y-auto scrollbar-hide">
+              {cinemaSystemList.map((cinema) => (
+                <button
+                  key={cinema.maHeThongRap}
+                  className={`w-full group relative overflow-hidden rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
+                    selectedCinemaSystem?.maHeThongRap === cinema.maHeThongRap
+                      ? "border-red-500 bg-red-50 shadow-lg shadow-red-500/25"
+                      : "border-gray-200 bg-white hover:border-red-300 hover:shadow-lg"
+                  }`}
+                  onClick={() => fetchCinemaShowtimes(cinema)}
+                >
+                  <div className="p-4 flex justify-center">
+                    <div className="w-20 h-20 rounded-xl overflow-hidden bg-white shadow-sm">
+                      <img
+                        src={cinema.logo}
+                        alt={cinema.tenHeThongRap}
+                        className="w-full h-full object-contain p-2"
+                      />
+                    </div>
+                  </div>
+                </button>
+              ))}
             </div>
-            <p className="text-lg font-medium">Đang tải dữ liệu...</p>
           </div>
         </div>
-      ) : (
-        <div className="space-y-6">
-          {loading ? (
-            <div className="flex justify-center items-center h-64 bg-gray-50 rounded-3xl">
-              <Spin size="large" />
-            </div>
-          ) : cinemaShowtimes.length === 0 ? (
-            <div className="bg-gray-50 rounded-3xl p-12">
-              <Empty
-                description="Không có lịch chiếu cho hệ thống rạp này"
-                className="my-8"
-              />
-            </div>
-          ) : (
-            cinemaShowtimes.map((theater) => (
-              <div key={theater.maHeThongRap} className="space-y-6">
-                {theater.lstCumRap?.map((cumRap) => (
-                  <Card
-                    key={cumRap.maCumRap}
-                    className="cinema-card border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-3xl overflow-hidden"
-                    bodyStyle={{ padding: 0 }}
-                  >
-                    {/* Cinema Header */}
-                    <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/10 backdrop-blur-sm p-2">
-                          <img
-                            src={cumRap.hinhAnh}
-                            alt={cumRap.tenCumRap}
-                            className="w-full h-full object-cover rounded-xl"
-                          />
-                        </div>
+
+        {/* Cột 2: Cụm rạp - to hơn */}
+        <div className="col-span-4">
+          <div className="bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-200 h-[1000px]">
+            {selectedCinemaSystem ? (
+              <div className="space-y-5 h-full overflow-y-auto scrollbar-hide">
+                {loadingComplex ? (
+                  <div className="flex justify-center py-16">
+                    <Spin size="large" />
+                  </div>
+                ) : cinemaComplexList.length > 0 ? (
+                  cinemaComplexList.map((complex) => (
+                    <button
+                      key={complex.maCumRap}
+                      className={`w-full group relative overflow-hidden rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
+                        selectedCinemaComplex?.maCumRap === complex.maCumRap
+                          ? "border-blue-500 bg-blue-50 shadow-lg shadow-blue-500/25"
+                          : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-lg"
+                      }`}
+                      onClick={() =>
+                        dispatch(setSelectedCinemaComplexAction(complex))
+                      }
+                    >
+                      <div className="p-6 text-left">
+                        <h4 className="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors line-clamp-2 mb-4">
+                          {complex.tenCumRap}
+                        </h4>
+                        <p className="text-base text-gray-600 line-clamp-3 leading-relaxed">
+                          {complex.diaChi}
+                        </p>
+                      </div>
+                    </button>
+                  ))
+                ) : (
+                  <div className="text-center py-20 text-gray-500 text-lg">
+                    Không có cụm rạp
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-20 text-gray-500 text-lg">
+                Chọn hệ thống rạp để xem cụm rạp
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Cột 3: Lịch chiếu - to và nhiều hơn */}
+        <div className="col-span-6">
+          <div className="bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-200 h-[1000px]">
+            {selectedCinemaComplex ? (
+              <div className="space-y-8 h-full overflow-y-auto scrollbar-hide">
+                {(() => {
+                  const cinemaData = cinemaShowtimes?.find((cinema) =>
+                    cinema.lstCumRap?.some(
+                      (cumRap) =>
+                        cumRap.maCumRap === selectedCinemaComplex.maCumRap
+                    )
+                  );
+
+                  const cumRapData = cinemaData?.lstCumRap?.find(
+                    (cumRap) =>
+                      cumRap.maCumRap === selectedCinemaComplex.maCumRap
+                  );
+
+                  if (
+                    !cumRapData ||
+                    !cumRapData.danhSachPhim ||
+                    cumRapData.danhSachPhim.length === 0
+                  ) {
+                    return (
+                      <div className="text-center py-24 text-gray-500 text-xl">
+                        Không có lịch chiếu cho cụm rạp này
+                      </div>
+                    );
+                  }
+
+                  return cumRapData.danhSachPhim.map((movie) => (
+                    <div
+                      key={movie.maPhim}
+                      className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow"
+                    >
+                      <div className="flex items-start gap-6 mb-8">
+                        <img
+                          src={movie.hinhAnh}
+                          alt={movie.tenPhim}
+                          className="w-24 h-32 object-cover rounded-xl shadow-sm"
+                        />
                         <div className="flex-1">
-                          <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
-                            {cumRap.tenCumRap}
-                            <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs">
-                              PREMIUM
+                          <h5 className="font-bold text-gray-800 text-xl line-clamp-2 mb-4">
+                            {movie.tenPhim}
+                          </h5>
+                          <div className="flex items-center gap-4 text-base text-gray-600 mb-5">
+                            <span className="flex items-center gap-1">
+                              <span className="text-yellow-500">⭐</span>
+                              <strong>{movie.danhGia}/10</strong>
                             </span>
-                          </h3>
-                          <p className="text-gray-300 flex items-center gap-2">
-                            <EnvironmentOutlined />
-                            {cumRap.diaChi}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <div className="flex items-center gap-1 text-yellow-400 mb-1">
-                            <StarOutlined />
-                            <span className="font-bold">4.8</span>
+                            <span className="px-2 py-1 bg-red-100 text-red-600 rounded-full text-xs font-medium">
+                              T{movie.tuoi}+
+                            </span>
                           </div>
-                          <p className="text-xs text-gray-400">1,234 đánh giá</p>
+
+                          {/* Ngày chiếu */}
+                          <div className="text-sm text-gray-500 mb-4 font-medium">
+                            Thứ Hai, 7 Tháng Một 2019
+                          </div>
+
+                          {/* Suất chiếu */}
+                          <div className="grid grid-cols-4 gap-3">
+                            {movie.lstLichChieuTheoPhim &&
+                              movie.lstLichChieuTheoPhim
+                                .slice(0, 8)
+                                .map((showtime) => (
+                                  <button
+                                    key={showtime.maLichChieu}
+                                    className="px-4 py-3 bg-white border-2 border-red-500 text-red-600 text-sm font-medium rounded-lg hover:bg-red-500 hover:text-white transition-all duration-200 transform hover:scale-105"
+                                    onClick={() =>
+                                      navigate(`/movie-detail/${movie.maPhim}`)
+                                    }
+                                  >
+                                    {new Date(
+                                      showtime.ngayChieuGioChieu
+                                    ).toLocaleTimeString("vi-VN", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </button>
+                                ))}
+                          </div>
                         </div>
                       </div>
                     </div>
-
-                    {/* Movies List */}
-                    <div className="p-6 bg-white">
-                      {cumRap.danhSachPhim?.length === 0 ? (
-                        <Empty
-                          description="Không có phim chiếu tại cụm rạp này"
-                          className="my-8"
-                          size="small"
-                        />
-                      ) : (
-                        <div className="space-y-6">
-                          {cumRap.danhSachPhim?.map((phim) => {
-                            const isExpanded = expandedMovies.has(phim.maPhim);
-                            const showtimes = phim.lstLichChieuTheoPhim || [];
-                            const visibleShowtimes = isExpanded ? showtimes : showtimes.slice(0, 6);
-                            
-                            return (
-                              <div
-                                key={phim.maPhim}
-                                className="movie-item bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 border border-gray-100 hover:border-red-200 hover:shadow-md transition-all duration-300"
-                              >
-                                <div className="flex flex-col lg:flex-row gap-6">
-                                  {/* Movie Info */}
-                                  <div className="flex gap-4 lg:min-w-[400px]">
-                                    <div className="relative group cursor-pointer">
-                                      <img
-                                        src={phim.hinhAnh}
-                                        alt={phim.tenPhim}
-                                        className="w-20 h-28 object-cover rounded-xl shadow-lg group-hover:scale-105 transition-transform duration-300"
-                                        onClick={() => navigate(`/movie-detail/${phim.maPhim}`)}
-                                      />
-                                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 rounded-xl transition-all duration-300 flex items-center justify-center">
-                                        <PlayCircleOutlined className="text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                      </div>
-                                    </div>
-                                    
-                                    <div className="flex-1">
-                                      <h4
-                                        className="font-bold text-lg text-gray-800 mb-2 cursor-pointer hover:text-red-600 transition-colors line-clamp-2 leading-tight"
-                                        onClick={() => navigate(`/movie-detail/${phim.maPhim}`)}
-                                      >
-                                        {phim.tenPhim}
-                                      </h4>
-                                      
-                                      <div className="flex flex-wrap gap-2 mb-3">
-                                        {phim.hot && (
-                                          <Tag color="red" className="flex items-center gap-1 border-0 rounded-full">
-                                            <FireOutlined />
-                                            HOT
-                                          </Tag>
-                                        )}
-                                        {phim.dangChieu && (
-                                          <Tag color="green" className="border-0 rounded-full">
-                                            Đang chiếu
-                                          </Tag>
-                                        )}
-                                        <Tag color="blue" className="border-0 rounded-full">
-                                          T16
-                                        </Tag>
-                                      </div>
-                                      
-                                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                                        <span className="flex items-center gap-1">
-                                          <ClockCircleOutlined />
-                                          {phim.thoiLuong || "120"} phút
-                                        </span>
-                                        <span className="flex items-center gap-1">
-                                          <StarOutlined className="text-yellow-500" />
-                                          8.5
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/* Showtimes */}
-                                  <div className="flex-1">
-                                    {showtimes.length === 0 ? (
-                                      <div className="text-center py-8">
-                                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                          <ClockCircleOutlined className="text-gray-400 text-xl" />
-                                        </div>
-                                        <p className="text-gray-500 font-medium">Chưa có lịch chiếu</p>
-                                      </div>
-                                    ) : (
-                                      <div>
-                                        <div className="flex items-center justify-between mb-4">
-                                          <h5 className="font-semibold text-gray-700 flex items-center gap-2">
-                                            <CalendarOutlined />
-                                            Lịch chiếu ({showtimes.length} suất)
-                                          </h5>
-                                          {showtimes.length > 6 && (
-                                            <button
-                                              onClick={() => toggleMovieExpansion(phim.maPhim)}
-                                              className="text-red-500 hover:text-red-600 text-sm font-medium transition-colors"
-                                            >
-                                              {isExpanded ? "Thu gọn" : `+${showtimes.length - 6} suất khác`}
-                                            </button>
-                                          )}
-                                        </div>
-                                        
-                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                                          {visibleShowtimes.map((lichChieu) => {
-                                            const showDate = new Date(lichChieu.ngayChieuGioChieu);
-                                            const isToday = showDate.toDateString() === new Date().toDateString();
-                                            const isPast = showDate < new Date();
-                                            
-                                            return (
-                                              <Tooltip
-                                                key={lichChieu.maLichChieu}
-                                                title={`${formatTime(lichChieu.ngayChieuGioChieu)} - ${formatPrice(lichChieu.giaVe)}`}
-                                              >
-                                                <Button
-                                                  className={`showtime-btn h-auto py-3 px-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
-                                                    isPast
-                                                      ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
-                                                      : isToday
-                                                      ? "border-red-500 bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25 hover:shadow-xl"
-                                                      : "border-blue-500 bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-xl"
-                                                  }`}
-                                                  disabled={isPast}
-                                                  onClick={() => {
-                                                    if (!isPast) {
-                                                      navigate(`/booking/${lichChieu.maLichChieu}`);
-                                                    }
-                                                  }}
-                                                >
-                                                  <div className="text-center">
-                                                    <div className="font-bold text-sm mb-1">
-                                                      {formatTime(lichChieu.ngayChieuGioChieu)}
-                                                    </div>
-                                                    <div className="text-xs opacity-90">
-                                                      {formatPrice(lichChieu.giaVe)}
-                                                    </div>
-                                                    {isToday && (
-                                                      <div className="text-xs mt-1 bg-white/20 rounded-full px-2 py-0.5">
-                                                        Hôm nay
-                                                      </div>
-                                                    )}
-                                                  </div>
-                                                </Button>
-                                              </Tooltip>
-                                            );
-                                          })}
-                                        </div>
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  </Card>
-                ))}
+                  ));
+                })()}
               </div>
-            ))
-          )}
+            ) : (
+              <div className="text-center py-24 text-gray-500 text-xl">
+                Chọn cụm rạp để xem lịch chiếu
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

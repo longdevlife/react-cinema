@@ -4,7 +4,7 @@ import ListMovie from "./components/ListMovie";
 import CinemaShowtimes from "./components/CinemaShowtimes";
 import Section from "../../HOC/Section";
 import NewsSection from "./components/NewsSection";
-import StatsSection from "./components/StatsSection";
+
 import TestimonialsSection from "./components/TestimonialsSection";
 
 const HomePage = () => {
