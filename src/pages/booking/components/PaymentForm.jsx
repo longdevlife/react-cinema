@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Modal, notification } from "antd";
 import { cinemaService } from "../../../services/cinemaService";
 import { userService } from "../../../services/userService";
 
@@ -17,6 +18,7 @@ const PaymentForm = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("momo");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     // Fetch thông tin user từ API để auto-fill
@@ -121,6 +123,20 @@ const PaymentForm = () => {
 
     if (!validateForm()) return;
 
+    // Hiển thị modal xác nhận
+    setShowConfirmModal(true);
+  };
+
+  const confirmPayment = () => {
+    setShowConfirmModal(false);
+    proceedWithPayment();
+  };
+
+  const cancelPayment = () => {
+    setShowConfirmModal(false);
+  };
+
+  const proceedWithPayment = async () => {
     setIsSubmitting(true);
 
     try {
@@ -170,10 +186,27 @@ const PaymentForm = () => {
 
       sessionStorage.setItem("bookingSuccess", JSON.stringify(successData));
       sessionStorage.removeItem("bookingData");
+
+      // Thông báo đặt vé thành công
+      notification.success({
+        message: "🎉 Đặt vé thành công!",
+        description: `Vé phim "${bookingData.showtimeDetail.thongTinPhim.tenPhim}" đã được đặt thành công. Mã đặt vé: ${ticketData.bookingCode}`,
+        placement: "topRight",
+        duration: 4,
+      });
+
       navigate("/booking/success");
     } catch (error) {
       console.error("Booking error:", error);
-      alert("Đặt vé thất bại. Vui lòng thử lại!");
+
+      // Thông báo lỗi đặt vé
+      notification.error({
+        message: "❌ Đặt vé thất bại",
+        description:
+          "Có lỗi xảy ra trong quá trình đặt vé. Vui lòng kiểm tra lại thông tin và thử lại.",
+        placement: "topRight",
+        duration: 4,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -438,6 +471,42 @@ const PaymentForm = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal xác nhận thanh toán */}
+      <Modal
+        title="🎫 Xác nhận mua vé"
+        open={showConfirmModal}
+        onOk={confirmPayment}
+        onCancel={cancelPayment}
+        okText="Xác nhận mua"
+        cancelText="Hủy bỏ"
+        okType="primary"
+        centered
+      >
+        <div className="py-4">
+          <p className="text-gray-600 mb-2">
+            Bạn có chắc chắn muốn mua vé xem phim này không?
+          </p>
+          {bookingData && (
+            <div className="bg-gray-50 p-3 rounded-lg mt-3">
+              <p className="font-medium">Thông tin đặt vé:</p>
+              <p className="text-sm text-gray-600">
+                • Phim: {bookingData.showtimeDetail.thongTinPhim.tenPhim}
+              </p>
+              <p className="text-sm text-gray-600">
+                • Ghế:{" "}
+                {bookingData.selectedSeats
+                  .map((seat) => seat.tenGhe)
+                  .join(", ")}
+              </p>
+              <p className="text-sm text-gray-600">
+                • Tổng tiền: {bookingData.totalPrice.toLocaleString("vi-VN")}{" "}
+                VNĐ
+              </p>
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Modal } from "antd";
 
 const BookingSuccess = () => {
   const navigate = useNavigate();
@@ -9,7 +10,33 @@ const BookingSuccess = () => {
     // Lấy dữ liệu thành công từ sessionStorage
     const successData = sessionStorage.getItem("bookingSuccess");
     if (successData) {
-      setBookingData(JSON.parse(successData));
+      const data = JSON.parse(successData);
+      setBookingData(data);
+
+      // Hiển thị Modal thông báo thành công sau khi load data
+      setTimeout(() => {
+        Modal.success({
+          title: "🎉 Đặt vé thành công!",
+          content: (
+            <div className="py-4">
+              <p className="text-gray-600 mb-2">
+                Chúc mừng! Bạn đã đặt vé xem phim{" "}
+                <strong>{data.showtimeDetail?.thongTinPhim?.tenPhim}</strong>{" "}
+                thành công.
+              </p>
+              <p className="text-sm text-green-600 mb-2">
+                ✅ Mã đặt vé: <strong>{data.bookingCode}</strong>
+              </p>
+              <p className="text-sm text-blue-600">
+                🎬 Vui lòng đến rạp đúng giờ và xuất trình mã đặt vé.
+              </p>
+            </div>
+          ),
+          width: 500,
+          centered: true,
+          okText: "Tuyệt vời!",
+        });
+      }, 500);
     } else {
       // Nếu không có dữ liệu, quay về trang chủ
       navigate("/");
@@ -24,7 +51,7 @@ const BookingSuccess = () => {
 
   const handleViewHistory = () => {
     sessionStorage.removeItem("bookingSuccess");
-    navigate("/info"); // Trang thông tin user
+    navigate("/ticket-history"); // Trang thông tin user
   };
 
   if (!bookingData) return null;

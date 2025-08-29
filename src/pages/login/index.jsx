@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input, notification } from "antd";
 import { userService } from "../../services/userService";
 import { useDispatch } from "react-redux";
 import { setInfoUserAction } from "../../stores/user";
@@ -26,17 +26,33 @@ const LoginPage = () => {
       // Lưu thông tin người dùng vào localStorage
       localStorageUtil.set(keysLocalStorage.INFO_USER, infoUser);
 
-      message.success("Đăng nhập thành công!");
+      // Modal thông báo đăng nhập thành công
+      notification.success({
+        message: "🎉 Đăng nhập thành công!",
+        description: `Chào mừng ${infoUser.hoTen} quay trở lại! Sẵn sàng khám phá những bộ phim tuyệt vời.`,
+        placement: "topRight",
+        duration: 3,
+      });
 
-      // Chuyển hướng dựa trên loại người dùng
-      if (infoUser.maLoaiNguoiDung === "QuanTri") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
+      // Chuyển hướng sau 1 giây
+      setTimeout(() => {
+        if (infoUser.maLoaiNguoiDung === "QuanTri") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
+      }, 1000);
     } catch (error) {
       console.error("Login failed:", error);
-      message.error("Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin.");
+
+      // Thông báo lỗi đăng nhập
+      notification.error({
+        message: "❌ Đăng nhập thất bại",
+        description:
+          "Tài khoản hoặc mật khẩu không đúng. Vui lòng kiểm tra lại thông tin và thử lại.",
+        placement: "topRight",
+        duration: 4,
+      });
     }
   };
 
