@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { cinemaService } from "../../../services/cinemaService";
 import {
   setCinemaSystemListAction,
@@ -13,6 +14,7 @@ import {
 
 const MovieShowtimes = ({ movieId, movieDetail }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     cinemaSystemList,
     selectedCinemaSystem,
@@ -102,7 +104,8 @@ const MovieShowtimes = ({ movieId, movieDetail }) => {
 
   const handleShowtimeClick = (showtime) => {
     console.log("Selected showtime:", showtime);
-    alert(`Bạn đã chọn suất chiếu: ${showtime.ngayChieuGioChieu}`);
+    // Chuyển đến trang đặt vé
+    navigate(`/booking/${showtime.maLichChieu}`);
   };
 
   // ===================== THUẬT TOÁN THÔNG MINH =====================

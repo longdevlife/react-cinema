@@ -7,6 +7,7 @@ import {
   LogoutOutlined,
   LoginOutlined,
   UserAddOutlined,
+  HistoryOutlined,
 } from "@ant-design/icons";
 import { Avatar, Dropdown } from "antd";
 
@@ -40,6 +41,12 @@ const NavBarDesktopTablet = () => {
       label: "Thông tin cá nhân",
       icon: <UserOutlined />,
       onClick: () => navigate("/info"),
+    },
+    {
+      key: "history",
+      label: "Lịch sử vé",
+      icon: <HistoryOutlined />,
+      onClick: () => navigate("/ticket-history"),
     },
     {
       key: "logout",

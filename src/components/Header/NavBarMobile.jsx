@@ -89,6 +89,15 @@ const NavBarMobile = () => {
                 Thông tin cá nhân
               </button>
               <button
+                onClick={() => {
+                  navigate("/ticket-history");
+                  setOpen(false);
+                }}
+                className="w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+              >
+                Lịch sử vé
+              </button>
+              <button
                 onClick={handleLogout}
                 className="w-full px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
               >

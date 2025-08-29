@@ -19,4 +19,16 @@ export const cinemaService = {
       `/QuanLyRap/LayThongTinLichChieuHeThongRap?maNhom=GP01&maHeThongRap=${maHeThongRap}`
     );
   },
+
+  // Lấy thông tin lịch chiếu chi tiết (sơ đồ ghế)
+  getShowtimeDetail: async (maLichChieu) => {
+    return axiosCustom.get(
+      `/QuanLyDatVe/LayDanhSachPhongVe?MaLichChieu=${maLichChieu}`
+    );
+  },
+
+  // Đặt vé
+  bookTickets: async (bookingData) => {
+    return axiosCustom.post("/QuanLyDatVe/DatVe", bookingData);
+  },
 };

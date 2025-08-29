@@ -3,6 +3,8 @@ import HomePage from "../pages/home";
 import LoginPage from "../pages/login";
 import MovieDetailPage from "../pages/movie-detail";
 import RegisterPage from "../pages/register";
+import BookingPage from "../pages/booking";
+import TicketHistory from "../pages/ticket-history";
 import AuthTemplate from "../template/AuthTemplate";
 import HomeTemplate from "../template/HomeTemplate";
 import AuthCheck, { roleUser } from "../HOC/AuthCheck";
@@ -29,10 +31,26 @@ const routers = [
         ),
       },
       {
+        path: "/booking/*",
+        element: (
+          <AuthCheck isNeedLogin={true}>
+            <BookingPage />
+          </AuthCheck>
+        ),
+      },
+      {
         path: "/info",
         element: (
           <AuthCheck isNeedLogin={true}>
             <UserInforPage />
+          </AuthCheck>
+        ),
+      },
+      {
+        path: "/ticket-history",
+        element: (
+          <AuthCheck isNeedLogin={true}>
+            <TicketHistory />
           </AuthCheck>
         ),
       },
