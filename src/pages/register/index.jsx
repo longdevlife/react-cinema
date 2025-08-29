@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Form, Input, Select, message } from "antd";
+import React, { useState } from "react";
+import { Button, Form, Input, Select, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { userService } from "../../services/userService";
@@ -8,6 +8,9 @@ const { Option } = Select;
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onFinish = async (values) => {
     try {
@@ -24,13 +27,23 @@ const RegisterPage = () => {
 
       const response = await userService.register(registerData);
       console.log("Register response:", response);
-      message.success("Đăng ký thành công! Vui lòng đăng nhập.");
-      setTimeout(() => navigate("/login"), 600);
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Register failed:", error);
-      const errorMessage = error.response?.data?.content || "Đăng ký thất bại! Vui lòng thử lại.";
-      message.error(errorMessage);
+      const errorContent = error.response?.data?.content || "Đăng ký thất bại! Vui lòng thử lại.";
+      setErrorMessage(errorContent);
+      setShowErrorModal(true);
     }
+  };
+
+  const handleSuccessModalClose = () => {
+    setShowSuccessModal(false);
+    navigate("/login");
+  };
+
+  const handleErrorModalClose = () => {
+    setShowErrorModal(false);
+    setErrorMessage("");
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -257,6 +270,73 @@ const RegisterPage = () => {
           <div className="absolute inset-0 bg-black opacity-10"></div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <Modal
+        title={
+          <div className="flex items-center text-green-600">
+            <span className="text-2xl mr-2">✅</span>
+            <span className="text-lg font-semibold">Đăng ký thành công!</span>
+          </div>
+        }
+        open={showSuccessModal}
+        onOk={handleSuccessModalClose}
+        onCancel={handleSuccessModalClose}
+        footer={[
+          <Button 
+            key="ok" 
+            type="primary" 
+            onClick={handleSuccessModalClose}
+            className="bg-green-500 hover:bg-green-600 border-green-500"
+          >
+            Đi đến trang đăng nhập
+          </Button>
+        ]}
+        centered
+        width={400}
+      >
+        <div className="py-4">
+          <p className="text-gray-700 text-base">
+            Tài khoản của bạn đã được tạo thành công! 
+            <br />
+            Vui lòng đăng nhập để tiếp tục sử dụng dịch vụ.
+          </p>
+        </div>
+      </Modal>
+
+      {/* Error Modal */}
+      <Modal
+        title={
+          <div className="flex items-center text-red-600">
+            <span className="text-2xl mr-2">❌</span>
+            <span className="text-lg font-semibold">Đăng ký thất bại!</span>
+          </div>
+        }
+        open={showErrorModal}
+        onOk={handleErrorModalClose}
+        onCancel={handleErrorModalClose}
+        footer={[
+          <Button 
+            key="ok" 
+            type="primary" 
+            onClick={handleErrorModalClose}
+            className="bg-red-500 hover:bg-red-600 border-red-500"
+          >
+            Thử lại
+          </Button>
+        ]}
+        centered
+        width={400}
+      >
+        <div className="py-4">
+          <p className="text-gray-700 text-base">
+            <span className="font-medium">Lý do:</span> {errorMessage}
+          </p>
+          <p className="text-gray-600 text-sm mt-2">
+            Vui lòng kiểm tra lại thông tin và thử lại.
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 };
