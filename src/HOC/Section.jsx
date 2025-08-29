@@ -3,11 +3,20 @@ import React from "react";
 // các component luôn luôn có props là children
 const Section = ({ children, titleSection }) => {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-20 bg-white relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-purple-500 to-blue-500"></div>
+      
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 text-gray-900">
-          {titleSection}
-        </h2>
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-500 to-purple-600 rounded-full mb-6">
+            <span className="text-2xl text-white">🎬</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-gray-900 via-red-600 to-purple-600 bg-clip-text text-transparent">
+            {titleSection}
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-red-500 to-purple-600 mx-auto rounded-full"></div>
+        </div>
         {children}
       </div>
     </section>

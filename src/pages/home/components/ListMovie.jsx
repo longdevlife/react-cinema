@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setListMovieAction } from "../../../stores/movie";
 import { movieService } from "../../../services/movieService";
-import { Card, Rate, Button, Tabs } from "antd";
+import { Card, Rate, Button, Tabs, Badge } from "antd";
 import { useNavigate } from "react-router-dom";
-import { PlayCircleOutlined, CalendarOutlined } from "@ant-design/icons";
+import { PlayCircleOutlined, CalendarOutlined, HeartOutlined, ShareAltOutlined } from "@ant-design/icons";
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -40,59 +40,91 @@ const ListMovie = () => {
 
   const renderMovieGrid = (movies) => {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 px-4 md:px-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 md:px-8">
         {movies.map((movie, index) => {
           return (
             <Card
               key={index}
-              className="movie-card group cursor-pointer border-0 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              className="movie-card group cursor-pointer border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 bg-white rounded-2xl overflow-hidden"
               onClick={() => handleRedirectToDetail(movie.maPhim)}
               cover={
                 <div className="relative overflow-hidden">
                   <img
                     alt={movie.tenPhim}
                     src={movie.hinhAnh}
-                    className="w-full h-[280px] md:h-[350px] object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-[300px] md:h-[380px] object-cover group-hover:scale-110 transition-transform duration-700"
                   />
 
                   {/* Overlay khi hover */}
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="text-center">
-                      <PlayCircleOutlined className="text-white text-4xl mb-2" />
-                      <p className="text-white font-semibold">Xem trailer</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+                    <div className="text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform duration-300">
+                        <PlayCircleOutlined className="text-white text-2xl" />
+                      </div>
+                      <p className="text-white font-semibold text-lg">Xem trailer</p>
                     </div>
                   </div>
 
+                  {/* Action buttons overlay */}
+                  <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
+                    <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-colors duration-300">
+                      <HeartOutlined />
+                    </button>
+                    <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-blue-500 transition-colors duration-300">
+                      <ShareAltOutlined />
+                    </button>
+                  </div>
+
+                  {/* Movie status badges */}
+                  <div className="absolute top-4 left-4 flex flex-col gap-2">
+                    {movie.hot && (
+                      <Badge.Ribbon text="HOT" color="red" className="transform -translate-x-2">
+                        <div></div>
+                      </Badge.Ribbon>
+                    )}
+                    {movie.dangChieu && (
+                      <span className="bg-green-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
+                        Đang chiếu
+                      </span>
+                    )}
+                    </div>
+
                   {/* Rating badge */}
-                  <div className="absolute top-2 left-2 bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold">
+                  <div className="absolute bottom-4 left-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-3 py-1 rounded-full text-sm font-bold shadow-lg">
                     {(Math.random() * 2 + 8).toFixed(1)}
                   </div>
 
                   {/* Age rating */}
-                  <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
+                  <div className="absolute bottom-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
                     T16
                   </div>
                 </div>
               }
-              bodyStyle={{ padding: "12px" }}
+              bodyStyle={{ padding: "20px" }}
             >
               <div>
-                <h3 className="font-bold text-sm md:text-base line-clamp-2 mb-2 min-h-[40px]">
+                <h3 className="font-bold text-base md:text-lg line-clamp-2 mb-3 min-h-[48px] group-hover:text-red-600 transition-colors duration-300">
                   {movie.tenPhim}
                 </h3>
 
-                <div className="flex items-center justify-between mb-3">
-                  <Rate disabled defaultValue={4} size="small" />
-                  <span className="text-gray-500 text-xs">120 phút</span>
+                <div className="flex items-center justify-between mb-4">
+                  <Rate disabled defaultValue={4} size="small" className="text-yellow-500" />
+                  <span className="text-gray-500 text-sm font-medium">120 phút</span>
                 </div>
 
-                <div className="space-y-2">
+                {/* Genre tags */}
+                <div className="flex flex-wrap gap-1 mb-4">
+                  <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">Hành động</span>
+                  <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">Phiêu lưu</span>
+                </div>
+
+                <div className="space-y-3">
                   <Button
                     type="primary"
                     danger
                     block
                     icon={<CalendarOutlined />}
-                    className="font-semibold"
+                    className="font-semibold h-10 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 border-none shadow-lg hover:shadow-xl transition-all duration-300"
                     onClick={(e) => {
                       e.stopPropagation();
                       // Logic đặt vé
@@ -112,18 +144,34 @@ const ListMovie = () => {
   return (
     <div className="movie-section">
       {/* Tab navigation */}
-      <div className="mb-8">
+      <div className="mb-12">
         <Tabs
           activeKey={activeTab}
           onChange={setActiveTab}
           centered
           size="large"
-          className="movie-tabs"
+          className="movie-tabs custom-tabs"
         >
-          <TabPane tab="Đang chiếu" key="dang-chieu">
+          <TabPane 
+            tab={
+              <span className="flex items-center gap-2 px-4 py-2">
+                <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                Đang chiếu
+              </span>
+            } 
+            key="dang-chieu"
+          >
             {renderMovieGrid(dangChieuMovies)}
           </TabPane>
-          <TabPane tab="Sắp chiếu" key="sap-chieu">
+          <TabPane 
+            tab={
+              <span className="flex items-center gap-2 px-4 py-2">
+                <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+                Sắp chiếu
+              </span>
+            } 
+            key="sap-chieu"
+          >
             {renderMovieGrid(sapChieuMovies)}
           </TabPane>
         </Tabs>
