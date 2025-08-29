@@ -45,7 +45,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    // ẩn scroll bar lên xuống
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4 md:p-8">
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden max-w-4xl w-full flex">
         {/* Left Side - Welcome Back */}
         <div

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setListMovieAction } from "../../../stores/movie";
 import { movieService } from "../../../services/movieService";
-import { Card, Rate, Button, Tabs, Badge, Pagination } from "antd";
+import { Card, Rate, Button, Badge, Pagination } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
   PlayCircleOutlined,
@@ -13,7 +13,6 @@ import {
 } from "@ant-design/icons";
 
 const { Meta } = Card;
-const { TabPane } = Tabs;
 
 const ListMovie = () => {
   const dispatch = useDispatch();
@@ -192,82 +191,61 @@ const ListMovie = () => {
 
   return (
     <div className="movie-section">
-      {/* Tab navigation */}
-      <div className="mb-12">
-        <Tabs
-          activeKey={activeTab}
-          onChange={handleTabChange}
-          centered
-          size="large"
-          className="movie-tabs custom-tabs"
-        >
-          <TabPane
-            tab={
-              <span className="flex items-center gap-2 px-4 py-2">
-                <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                Đang chiếu ({dangChieuMovies.length})
-              </span>
-            }
-            key="dang-chieu"
-          >
-            <div className="space-y-8">
-              {renderMovieGrid(getCurrentMovies())}
+      {/* Tab navigation - CGV Style */}
+      <div className="mb-8">
+        <div className="flex items-center justify-start mb-6">
+          <div className="flex items-center">
+            <div className="w-1 h-8 bg-blue-600 mr-4"></div>
+            <h2 className="text-2xl font-bold text-gray-800 mr-8">PHIM</h2>
+          </div>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => handleTabChange("dang-chieu")}
+              className={`px-6 py-2 rounded-md font-medium transition-all duration-300 ${
+                activeTab === "dang-chieu"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+              }`}
+            >
+              Đang chiếu
+            </button>
+            <button
+              onClick={() => handleTabChange("sap-chieu")}
+              className={`px-6 py-2 rounded-md font-medium transition-all duration-300 ${
+                activeTab === "sap-chieu"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+              }`}
+            >
+              Sắp chiếu
+            </button>
+          </div>
+        </div>
 
-              {/* Pagination */}
-              {getTotalMovies() > pageSize && (
-                <div className="flex justify-center mt-8">
-                  <div className="bg-white rounded-2xl p-4 shadow-lg">
-                    <Pagination
-                      current={currentPage}
-                      total={getTotalMovies()}
-                      pageSize={pageSize}
-                      onChange={handlePageChange}
-                      showSizeChanger={false}
-                      showQuickJumper
-                      showTotal={(total, range) =>
-                        `${range[0]}-${range[1]} của ${total} phim`
-                      }
-                      className="custom-pagination"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </TabPane>
-          <TabPane
-            tab={
-              <span className="flex items-center gap-2 px-4 py-2">
-                <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-                Sắp chiếu ({sapChieuMovies.length})
-              </span>
-            }
-            key="sap-chieu"
-          >
-            <div className="space-y-8">
-              {renderMovieGrid(getCurrentMovies())}
+        {/* Content Area */}
+        <div className="space-y-8">
+          {renderMovieGrid(getCurrentMovies())}
 
-              {/* Pagination */}
-              {getTotalMovies() > pageSize && (
-                <div className="flex justify-center mt-8">
-                  <div className="bg-white rounded-2xl p-4 shadow-lg">
-                    <Pagination
-                      current={currentPage}
-                      total={getTotalMovies()}
-                      pageSize={pageSize}
-                      onChange={handlePageChange}
-                      showSizeChanger={false}
-                      showQuickJumper
-                      showTotal={(total, range) =>
-                        `${range[0]}-${range[1]} của ${total} phim`
-                      }
-                      className="custom-pagination"
-                    />
-                  </div>
-                </div>
-              )}
+          {/* Pagination */}
+          {getTotalMovies() > pageSize && (
+            <div className="flex justify-center mt-8">
+              <div className="bg-white rounded-2xl p-4 shadow-lg">
+                <Pagination
+                  current={currentPage}
+                  total={getTotalMovies()}
+                  pageSize={pageSize}
+                  onChange={handlePageChange}
+                  showSizeChanger={false}
+                  showQuickJumper
+                  showTotal={(total, range) =>
+                    `${range[0]}-${range[1]} của ${total} phim`
+                  }
+                  className="custom-pagination"
+                />
+              </div>
             </div>
-          </TabPane>
-        </Tabs>
+          )}
+        </div>
       </div>
     </div>
   );

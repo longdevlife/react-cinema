@@ -10,11 +10,11 @@ const NavBarMobile = () => {
   const { infoUser } = useSelector((state) => state.userSlice);
 
   const [open, setOpen] = useState(false);
-  
+
   const showDrawer = () => {
     setOpen(true);
   };
-  
+
   const onClose = () => {
     setOpen(false);
   };
@@ -24,10 +24,26 @@ const NavBarMobile = () => {
     setOpen(false);
   };
 
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerOffset = 100; // Offset for fixed header
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+    setOpen(false);
+  };
+
   return (
     <div>
-      <Button 
-        type="primary" 
+      <Button
+        type="primary"
         onClick={showDrawer}
         className="bg-purple-600 border-purple-600"
       >
@@ -41,6 +57,22 @@ const NavBarMobile = () => {
         className="mobile-nav-drawer"
       >
         <div className="flex flex-col space-y-4 p-4">
+          {/* Navigation Links */}
+          <div className="space-y-3 border-b border-gray-200 pb-4">
+            <button
+              onClick={() => scrollToSection("phim")}
+              className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-left"
+            >
+              📽️ Phim
+            </button>
+            <button
+              onClick={() => scrollToSection("rap")}
+              className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-left"
+            >
+              🏪 Rạp
+            </button>
+          </div>
+
           {infoUser ? (
             <div className="space-y-4">
               <div className="text-center p-4 bg-gray-50 rounded-lg">

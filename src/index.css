@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Hide scrollbar */
 .scrollbar-hide {
   -ms-overflow-style: none; /* Internet Explorer 10+ */

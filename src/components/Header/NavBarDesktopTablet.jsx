@@ -19,6 +19,21 @@ const NavBarDesktopTablet = () => {
     dispatch(setLogoutAction());
   };
 
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerOffset = 100; // Offset for fixed header
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
   const userMenuItems = [
     {
       key: "profile",
@@ -38,18 +53,18 @@ const NavBarDesktopTablet = () => {
     <div className="flex items-center gap-6">
       {/* Navigation Links */}
       <nav className="hidden lg:flex items-center gap-6">
-        <a
-          href="#phim"
+        <button
+          onClick={() => scrollToSection("phim")}
           className="text-white hover:text-red-500 transition-colors duration-300 font-medium"
         >
           Phim
-        </a>
-        <a
-          href="#rap"
+        </button>
+        <button
+          onClick={() => scrollToSection("rap")}
           className="text-white hover:text-red-500 transition-colors duration-300 font-medium"
         >
           Rạp
-        </a>
+        </button>
         <a
           href="#khuyen-mai"
           className="text-white hover:text-red-500 transition-colors duration-300 font-medium"

@@ -14,13 +14,17 @@ const HomePage = () => {
       <CarouselMovie />
 
       {/* Movies Section */}
-      <Section titleSection={"PHIM"}>
-        <ListMovie />
+      <Section titleSection={"DANH SÁCH PHIM"}>
+        <div id="phim">
+          <ListMovie />
+        </div>
       </Section>
 
       {/* Cinema Showtimes Section */}
-      <Section titleSection={"Cụm Rạp"}>
-        <CinemaShowtimes />
+      <Section titleSection={"Cinema"}>
+        <div id="rap">
+          <CinemaShowtimes />
+        </div>
       </Section>
 
       {/* News & Events Section */}
