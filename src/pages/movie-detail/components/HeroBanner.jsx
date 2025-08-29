@@ -1,4 +1,5 @@
 import React from "react";
+import PlayCircleOutlined from "@ant-design/icons/PlayCircleOutlined";
 
 const HeroBanner = ({ movieDetail, onPlayTrailer }) => {
   if (!movieDetail) return null;
@@ -9,10 +10,10 @@ const HeroBanner = ({ movieDetail, onPlayTrailer }) => {
     console.log("Movie Detail:", movieDetail);
     console.log("Trailer URL:", url);
     console.log("Poster Image:", movieDetail.hinhAnh);
-    
+
     // Luôn ưu tiên poster phim trước
     let backgroundImage = movieDetail.hinhAnh;
-    
+
     if (url) {
       let videoId = "";
       if (url.includes("youtu.be/")) {
@@ -29,7 +30,7 @@ const HeroBanner = ({ movieDetail, onPlayTrailer }) => {
         console.log("YouTube Thumbnail:", backgroundImage);
       }
     }
-    
+
     console.log("Final Background Image:", backgroundImage);
     return backgroundImage;
   };
@@ -42,12 +43,12 @@ const HeroBanner = ({ movieDetail, onPlayTrailer }) => {
       <div
         className="absolute inset-0 bg-cover bg-center bg-gray-800 transition-all duration-500"
         style={{
-          backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
-          backgroundColor: backgroundImage ? 'transparent' : '#1f2937'
+          backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
+          backgroundColor: backgroundImage ? "transparent" : "#1f2937",
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-        
+
         {/* Fallback content nếu không có hình */}
         {!backgroundImage && (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -65,34 +66,39 @@ const HeroBanner = ({ movieDetail, onPlayTrailer }) => {
           onClick={onPlayTrailer}
           className="group relative w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden hover:scale-110 transition-all duration-500 shadow-2xl backdrop-blur-md border border-white/30"
           style={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
-            backdropFilter: 'blur(15px)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+            background:
+              "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))",
+            backdropFilter: "blur(15px)",
+            boxShadow:
+              "0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)",
           }}
         >
           {/* Hiệu ứng ánh sáng phản chiếu */}
-          <div 
+          <div
             className="absolute inset-0 bg-gradient-to-tr from-white/20 via-transparent to-transparent opacity-60 group-hover:opacity-100 transition-all duration-500"
             style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%, rgba(255,255,255,0.1) 100%)'
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%, rgba(255,255,255,0.1) 100%)",
             }}
           ></div>
-          
+
           {/* Hiệu ứng gợn sóng khi hover */}
-          <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-30 transition-all duration-700"
+          <div
+            className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-30 transition-all duration-700"
             style={{
-              background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)',
-              animation: 'pulse 2s infinite'
+              background:
+                "radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)",
+              animation: "pulse 2s infinite",
             }}
           ></div>
-          
+
           {/* Icon play với màu trắng thuần */}
           <div className="relative z-10 flex items-center justify-center w-full h-full">
-            <span className="text-3xl md:text-4xl text-white ml-1 group-hover:text-white/90 transition-all duration-300 filter drop-shadow-lg">
-              ▶
+            <span className="text-5xl text-white  group-hover:text-white/90 transition-all duration-300 filter drop-shadow-lg">
+              <PlayCircleOutlined />
             </span>
           </div>
-          
+
           {/* Viền phản chiếu động */}
           <div className="absolute inset-0 rounded-full border border-white/20 group-hover:border-white/40 transition-all duration-500"></div>
         </button>
