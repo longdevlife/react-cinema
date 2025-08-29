@@ -269,9 +269,9 @@ const TicketHistory = () => {
                 key={ticket.id}
                 className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
               >
-                <div className="flex flex-col lg:flex-row">
+                <div className="flex flex-col lg:flex-row min-h-[280px]">
                   {/* Movie Poster - Cải thiện kích thước và hiển thị */}
-                  <div className="lg:w-48 lg:h-72 w-full h-64 bg-gray-200 relative overflow-hidden">
+                  <div className="lg:w-48 lg:h-80 w-full h-64 bg-gray-200 relative overflow-hidden">
                     <img
                       src={ticket.showtimeDetail.thongTinPhim.hinhAnh}
                       alt={ticket.showtimeDetail.thongTinPhim.tenPhim}

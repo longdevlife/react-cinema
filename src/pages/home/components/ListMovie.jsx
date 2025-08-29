@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setListMovieAction } from "../../../stores/movie";
 import { movieService } from "../../../services/movieService";
 import { Pagination, Modal } from "antd";
+import PlayCircleOutlined from "@ant-design/icons/PlayCircleOutlined";
 import { useNavigate } from "react-router-dom";
 
 const ListMovie = () => {
@@ -158,7 +159,9 @@ const ListMovie = () => {
                       }}
                       className="bg-transparent border-2 border-white text-white hover:bg-orange-600 hover:text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-1 text-sm"
                     >
-                      <span>▶️</span>
+                      <span>
+                        <PlayCircleOutlined />
+                      </span>
                       <span>Trailer</span>
                     </button>
                   </div>

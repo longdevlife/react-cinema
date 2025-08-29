@@ -209,7 +209,7 @@ const CinemaShowtimes = () => {
                         <img
                           src={movie.hinhAnh}
                           alt={movie.tenPhim}
-                          className="w-24 h-32 object-cover rounded-xl shadow-sm"
+                          className="w-30 h-50 object-cover rounded-xl shadow-sm"
                         />
                         <div className="flex-1">
                           <h5 className="font-bold text-gray-800 text-xl line-clamp-2 mb-4">
@@ -240,7 +240,9 @@ const CinemaShowtimes = () => {
                                     key={showtime.maLichChieu}
                                     className="px-4 py-3 bg-white border-2 border-red-500 text-red-600 text-sm font-medium rounded-lg hover:bg-red-500 hover:text-white transition-all duration-200 transform hover:scale-105"
                                     onClick={() =>
-                                      navigate(`/movie-detail/${movie.maPhim}`)
+                                      navigate(
+                                        `/booking/${showtime.maLichChieu}`
+                                      )
                                     }
                                   >
                                     {new Date(
