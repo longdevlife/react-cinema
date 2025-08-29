@@ -156,7 +156,7 @@ const ListMovie = () => {
                           );
                         }
                       }}
-                      className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-black px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-1 text-sm"
+                      className="bg-transparent border-2 border-white text-white hover:bg-orange-600 hover:text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-1 text-sm"
                     >
                       <span>▶️</span>
                       <span>Trailer</span>

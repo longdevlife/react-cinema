@@ -95,29 +95,28 @@ const CinemaShowtimes = () => {
       </h3>
 
       {/* Layout 3 cột */}
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
         {/* Cột 1: Hệ thống rạp - chỉ logo */}
-        <div className="col-span-2">
-          <div className="bg-gray-50 rounded-2xl p-6 shadow-sm border border-gray-200 h-[1000px]">
-            <div className="space-y-4 h-full overflow-y-auto scrollbar-hide">
+        <div className="md:col-span-2 order-1">
+          <div className="bg-gray-50 rounded-2xl p-4 md:p-6 shadow-sm border border-gray-200 md:h-[900px]">
+            <div className="flex md:block gap-3 md:space-y-4 h-full overflow-x-auto md:overflow-y-auto scrollbar-hide">
               {cinemaSystemList.map((cinema) => (
                 <button
                   key={cinema.maHeThongRap}
-                  className={`w-full group relative overflow-hidden rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
+                  className={`group relative rounded-xl border-2 transition-colors duration-200 min-w-[72px] md:min-w-0 w-auto md:w-24 h-20 md:h-24 mx-auto flex items-center justify-center ${
                     selectedCinemaSystem?.maHeThongRap === cinema.maHeThongRap
-                      ? "border-red-500 bg-red-50 shadow-lg shadow-red-500/25"
-                      : "border-gray-200 bg-white hover:border-red-300 hover:shadow-lg"
+                      ? "border-red-500 outline outline-2 outline-red-200"
+                      : "border-gray-200 bg-transparent hover:border-red-300"
                   }`}
                   onClick={() => fetchCinemaShowtimes(cinema)}
                 >
-                  <div className="p-4 flex justify-center">
-                    <div className="w-20 h-20 rounded-xl overflow-hidden bg-white shadow-sm">
-                      <img
-                        src={cinema.logo}
-                        alt={cinema.tenHeThongRap}
-                        className="w-full h-full object-contain p-2"
-                      />
-                    </div>
+                  <div className="flex justify-center items-center w-16 h-16 md:w-20 md:h-20">
+                    <img
+                      src={cinema.logo}
+                      alt={cinema.tenHeThongRap}
+                      className="w-12 h-12 md:w-16 md:h-16 object-contain transition-transform duration-200 group-hover:scale-105 mix-blend-multiply"
+                      loading="lazy"
+                    />
                   </div>
                 </button>
               ))}
@@ -126,10 +125,10 @@ const CinemaShowtimes = () => {
         </div>
 
         {/* Cột 2: Cụm rạp - to hơn */}
-        <div className="col-span-4">
-          <div className="bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-200 h-[1000px]">
+        <div className="md:col-span-4 order-2">
+          <div className="bg-gray-50 rounded-2xl p-5 md:p-8 shadow-sm border border-gray-200 md:h-[900px]">
             {selectedCinemaSystem ? (
-              <div className="space-y-5 h-full overflow-y-auto scrollbar-hide">
+              <div className="space-y-4 md:space-y-5 h-full overflow-y-auto scrollbar-hide">
                 {loadingComplex ? (
                   <div className="flex justify-center py-16">
                     <Spin size="large" />
@@ -138,20 +137,20 @@ const CinemaShowtimes = () => {
                   cinemaComplexList.map((complex) => (
                     <button
                       key={complex.maCumRap}
-                      className={`w-full group relative overflow-hidden rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
+                      className={`w-full group relative overflow-hidden rounded-xl border-2 transition-all duration-300 hover:scale-[1.01] hover:shadow-md ${
                         selectedCinemaComplex?.maCumRap === complex.maCumRap
-                          ? "border-blue-500 bg-blue-50 shadow-lg shadow-blue-500/25"
-                          : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-lg"
+                          ? "border-blue-500 bg-blue-50 outline outline-2 outline-blue-200"
+                          : "border-gray-200 bg-white hover:border-blue-300"
                       }`}
                       onClick={() =>
                         dispatch(setSelectedCinemaComplexAction(complex))
                       }
                     >
-                      <div className="p-6 text-left">
-                        <h4 className="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors line-clamp-2 mb-4">
+                      <div className="p-4 md:p-6 text-left">
+                        <h4 className="font-bold text-gray-800 text-base md:text-lg group-hover:text-blue-600 transition-colors line-clamp-2 mb-2 md:mb-4">
                           {complex.tenCumRap}
                         </h4>
-                        <p className="text-base text-gray-600 line-clamp-3 leading-relaxed">
+                        <p className="text-sm md:text-base text-gray-600 line-clamp-3 leading-relaxed">
                           {complex.diaChi}
                         </p>
                       </div>
@@ -172,8 +171,8 @@ const CinemaShowtimes = () => {
         </div>
 
         {/* Cột 3: Lịch chiếu - to và nhiều hơn */}
-        <div className="col-span-6">
-          <div className="bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-200 h-[1000px]">
+        <div className="md:col-span-6 order-3">
+          <div className="bg-gray-50 rounded-2xl p-5 md:p-8 shadow-sm border border-gray-200 md:h-[900px]">
             {selectedCinemaComplex ? (
               <div className="space-y-8 h-full overflow-y-auto scrollbar-hide">
                 {(() => {
