@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { userService } from "../../services/userService";
-import { message } from "antd";
+import { message, Modal } from "antd";
 
 const shema = yup.object({
   taiKhoan: yup
@@ -31,21 +31,9 @@ const shema = yup.object({
 const UserInforPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  /*
-"taiKhoan": "long",
-    "matKhau": "long",
-    "hoTen": "Hoàng Anh",
-    "email": "hoangtira@gmail.com",
-    "soDT": "0394287477",
-    "maNhom": "GP00",
-    "maLoaiNguoiDung": "KhachHang",
-    "loaiNguoiDung": {
-      "maLoaiNguoiDung": "KhachHang",
-      "tenLoai": "Khách hàng"
-    },
-    "thongTinDatVe": []
-  },
-*/
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const {
     register,
@@ -71,15 +59,25 @@ const UserInforPage = () => {
     try {
       setIsSubmitting(true);
       await userService.updateInfoUser({ ...dataForm, maNhom: "GP00" });
-      message.success("Cập nhật thông tin thành công!");
-      // gọi lại api lấy thông tin người dùng
-      // lấy thông tin người dùng => lưu lên store , lưu xuống localStorage
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Error updating user info:", error);
-      message.error("Cập nhật thất bại. Vui lòng thử lại!");
+      const errorContent =
+        error.response?.data?.content || "Cập nhật thất bại. Vui lòng thử lại!";
+      setErrorMessage(errorContent);
+      setShowErrorModal(true);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSuccessModalClose = () => {
+    setShowSuccessModal(false);
+  };
+
+  const handleErrorModalClose = () => {
+    setShowErrorModal(false);
+    setErrorMessage("");
   };
 
   const fetchInfoUser = async () => {
@@ -176,7 +174,9 @@ const UserInforPage = () => {
               Email
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">✉️</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                ✉️
+              </span>
               <input
                 {...register("email")}
                 className="w-full h-12 rounded-xl border border-gray-300 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
@@ -192,7 +192,9 @@ const UserInforPage = () => {
               Số điện thoại
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">📞</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                📞
+              </span>
               <input
                 {...register("soDT")}
                 className="w-full h-12 rounded-xl border border-gray-300 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
@@ -230,6 +232,71 @@ const UserInforPage = () => {
           </div>
         </form>
       </div>
+
+      {/* Success Modal */}
+      <Modal
+        title={
+          <div className="flex items-center text-green-600">
+            <span className="text-2xl mr-2">✅</span>
+            <span className="text-lg font-semibold">Cập nhật thành công!</span>
+          </div>
+        }
+        open={showSuccessModal}
+        onOk={handleSuccessModalClose}
+        onCancel={handleSuccessModalClose}
+        footer={[
+          <button
+            key="ok"
+            type="button"
+            className="ant-btn ant-btn-primary bg-green-500 hover:bg-green-600 border-green-500 text-white rounded p-2"
+            onClick={handleSuccessModalClose}
+          >
+            Đóng
+          </button>,
+        ]}
+        centered
+        width={400}
+      >
+        <div className="py-4">
+          <p className="text-gray-700 text-base">
+            Thông tin tài khoản của bạn đã được lưu thành công!
+          </p>
+        </div>
+      </Modal>
+
+      {/* Error Modal */}
+      <Modal
+        title={
+          <div className="flex items-center text-red-600">
+            <span className="text-2xl mr-2">❌</span>
+            <span className="text-lg font-semibold">Cập nhật thất bại!</span>
+          </div>
+        }
+        open={showErrorModal}
+        onOk={handleErrorModalClose}
+        onCancel={handleErrorModalClose}
+        footer={[
+          <button
+            key="ok"
+            type="button"
+            className="ant-btn ant-btn-primary bg-red-500 hover:bg-red-600 border-red-500 text-white"
+            onClick={handleErrorModalClose}
+          >
+            Thử lại
+          </button>,
+        ]}
+        centered
+        width={400}
+      >
+        <div className="py-4">
+          <p className="text-gray-700 text-base">
+            <span className="font-medium">Lý do:</span> {errorMessage}
+          </p>
+          <p className="text-gray-600 text-sm mt-2">
+            Vui lòng kiểm tra lại thông tin và thử lại.
+          </p>
+        </div>
+      </Modal>
     </section>
   );
 };
