@@ -1,6 +1,7 @@
 import React from "react";
 import CarouselMovie from "./components/CarouselMovie";
 import ListMovie from "./components/ListMovie";
+import CinemaShowtimes from "./components/CinemaShowtimes";
 import Section from "../../HOC/Section";
 
 const HomePage = () => {
@@ -14,16 +15,9 @@ const HomePage = () => {
         <ListMovie />
       </Section>
 
-      {/* Coming Soon: Schedule Section */}
-      <Section titleSection={"LỊCH CHIẾU"}>
-        <div className="bg-white rounded-lg shadow-lg p-8 mx-4 md:mx-8">
-          <div className="text-center text-gray-500">
-            <p className="text-lg">
-              Tính năng lịch chiếu đang được phát triển...
-            </p>
-            <p className="text-sm mt-2">Vui lòng quay lại sau!</p>
-          </div>
-        </div>
+      {/* Cinema Showtimes Section */}
+      <Section titleSection={"Cụm Rạp"}>
+        <CinemaShowtimes />
       </Section>
 
       {/* App Download Section */}
