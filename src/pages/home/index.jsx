@@ -37,7 +37,7 @@ const HomePage = () => {
         <TestimonialsSection />
       </Section>
 
-      {/* App Download Section */}
+      {/* FOOTER */}
       <section className="bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white py-20 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">

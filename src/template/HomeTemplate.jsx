@@ -4,9 +4,11 @@ import HeaderPage from "../components/Header";
 
 const HomeTemplate = () => {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <HeaderPage />
-      <Outlet />
+      <main className="pt-24 flex-1">
+        <Outlet />
+      </main>
     </div>
   );
 };

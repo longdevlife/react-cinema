@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { userService } from "../../services/userService";
@@ -24,12 +24,12 @@ const RegisterPage = () => {
 
       const response = await userService.register(registerData);
       console.log("Register response:", response);
-
-      // Modal thông báo đăng ký thành công
+      message.success("Đăng ký thành công! Vui lòng đăng nhập.");
+      setTimeout(() => navigate("/login"), 600);
     } catch (error) {
       console.error("Register failed:", error);
-
-      // Modal thông báo lỗi đăng ký
+      const errorMessage = error.response?.data?.content || "Đăng ký thất bại! Vui lòng thử lại.";
+      message.error(errorMessage);
     }
   };
 
