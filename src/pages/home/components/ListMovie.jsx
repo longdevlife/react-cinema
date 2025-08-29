@@ -3,16 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { setListMovieAction } from "../../../stores/movie";
 import { movieService } from "../../../services/movieService";
-import { Card, Rate, Button, Badge, Pagination } from "antd";
+import { Pagination, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
-import {
-  PlayCircleOutlined,
-  CalendarOutlined,
-  HeartOutlined,
-  ShareAltOutlined,
-} from "@ant-design/icons";
-
-const { Meta } = Card;
 
 const ListMovie = () => {
   const dispatch = useDispatch();
@@ -21,6 +13,8 @@ const ListMovie = () => {
   const [activeTab, setActiveTab] = useState("dang-chieu");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(8); // Số phim hiển thị trên mỗi trang
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentTrailer, setCurrentTrailer] = useState("");
 
   const fetchListMovie = async () => {
     try {
@@ -38,6 +32,32 @@ const ListMovie = () => {
   const handleRedirectToDetail = (movieId) => {
     console.log("movieId", movieId);
     navigate(`/detail/${movieId}`);
+  };
+
+  // Function để mở modal trailer
+  const openTrailerModal = (trailerUrl) => {
+    setCurrentTrailer(trailerUrl);
+    setIsModalOpen(true);
+  };
+
+  // Function để đóng modal trailer
+  const closeTrailerModal = () => {
+    setIsModalOpen(false);
+    setCurrentTrailer("");
+  };
+
+  // Function để convert YouTube URL thành embed URL
+  const getYouTubeEmbedUrl = (url) => {
+    if (!url) return "";
+
+    let videoId = "";
+    if (url.includes("youtu.be/")) {
+      videoId = url.split("youtu.be/")[1]?.split("?")[0];
+    } else if (url.includes("youtube.com/watch?v=")) {
+      videoId = url.split("v=")[1]?.split("&")[0];
+    }
+
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : "";
   };
 
   // Giả lập phân loại phim (vì API không có trường này)
@@ -71,118 +91,90 @@ const ListMovie = () => {
 
   const renderMovieGrid = (movies) => {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 md:px-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-6 lg:gap-6 px-6 md:px-12 lg:px-16">
         {movies.map((movie, index) => {
           return (
-            <Card
+            <div
               key={index}
-              className="movie-card group cursor-pointer border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 bg-white rounded-2xl overflow-hidden"
+              className="movie-card group cursor-pointer relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 bg-white w-full"
               onClick={() => handleRedirectToDetail(movie.maPhim)}
-              cover={
-                <div className="relative overflow-hidden">
-                  <img
-                    alt={movie.tenPhim}
-                    src={movie.hinhAnh}
-                    className="w-full h-[300px] md:h-[380px] object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-
-                  {/* Overlay khi hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
-                    <div className="text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform duration-300">
-                        <PlayCircleOutlined className="text-white text-2xl" />
-                      </div>
-                      <p className="text-white font-semibold text-lg">
-                        Xem trailer
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Action buttons overlay */}
-                  <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
-                    <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-colors duration-300">
-                      <HeartOutlined />
-                    </button>
-                    <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-blue-500 transition-colors duration-300">
-                      <ShareAltOutlined />
-                    </button>
-                  </div>
-
-                  {/* Movie status badges */}
-                  <div className="absolute top-4 left-4 flex flex-col gap-2">
-                    {movie.hot && (
-                      <Badge.Ribbon
-                        text="HOT"
-                        color="red"
-                        className="transform -translate-x-2"
-                      >
-                        <div></div>
-                      </Badge.Ribbon>
-                    )}
-                    {movie.dangChieu && (
-                      <span className="bg-green-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
-                        Đang chiếu
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Rating badge */}
-                  <div className="absolute bottom-4 left-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-                    {(Math.random() * 2 + 8).toFixed(1)}
-                  </div>
-
-                  {/* Age rating */}
-                  <div className="absolute bottom-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-                    T16
-                  </div>
-                </div>
-              }
-              bodyStyle={{ padding: "20px" }}
+              style={{
+                height: "520px",
+              }}
             >
-              <div>
-                <h3 className="font-bold text-base md:text-lg line-clamp-2 mb-3 min-h-[48px] group-hover:text-red-600 transition-colors duration-300">
-                  {movie.tenPhim}
-                </h3>
+              {/* Movie Poster Container */}
+              <div
+                className="relative overflow-hidden"
+                style={{ height: "460px" }}
+              >
+                <img
+                  alt={movie.tenPhim}
+                  src={movie.hinhAnh}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
 
-                <div className="flex items-center justify-between mb-4">
-                  <Rate
-                    disabled
-                    defaultValue={4}
-                    size="small"
-                    className="text-yellow-500"
-                  />
-                  <span className="text-gray-500 text-sm font-medium">
-                    120 phút
-                  </span>
+                {/* Rating Badge - nhỏ gọn hơn */}
+                <div className="absolute top-2 left-2 bg-yellow-500 text-black px-2 py-1 rounded text-xs font-bold flex items-center">
+                  <span className="text-yellow-800 mr-1">⭐</span>
+                  {movie.danhGia ? movie.danhGia.toFixed(1) : "0.0"}
                 </div>
 
-                {/* Genre tags */}
-                <div className="flex flex-wrap gap-1 mb-4">
-                  <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
-                    Hành động
-                  </span>
-                  <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
-                    Phiêu lưu
-                  </span>
+                {/* Age Rating */}
+                <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
+                  T16
                 </div>
 
-                <div className="space-y-3">
-                  <Button
-                    type="primary"
-                    danger
-                    block
-                    icon={<CalendarOutlined />}
-                    className="font-semibold h-10 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 border-none shadow-lg hover:shadow-xl transition-all duration-300"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // Logic đặt vé
-                    }}
-                  >
-                    Đặt vé
-                  </Button>
+                {/* Status Badge */}
+                {activeTab === "dang-chieu" && (
+                  <div className="absolute top-10 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-medium">
+                    ĐANG CHIẾU
+                  </div>
+                )}
+
+                {/* Hover Overlay với buttons */}
+                <div className="absolute inset-0  bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="flex space-x-3">
+                    {/* Mua vé Button */}
+                    <button
+                      onClick={() => handleRedirectToDetail(movie.maPhim)}
+                      className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-1 text-sm"
+                    >
+                      <span>🎫</span>
+                      <span>Mua vé</span>
+                    </button>
+
+                    {/* Trailer Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (movie.trailer) {
+                          openTrailerModal(movie.trailer);
+                        } else {
+                          console.log(
+                            "Không có trailer cho phim:",
+                            movie.tenPhim
+                          );
+                        }
+                      }}
+                      className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-black px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-1 text-sm"
+                    >
+                      <span>▶️</span>
+                      <span>Trailer</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </Card>
+
+              {/* Movie Title Only - như Galaxy Cinema */}
+              <div
+                className="p-4 flex items-center justify-center"
+                style={{ height: "60px" }}
+              >
+                <h3 className="font-medium text-sm text-gray-800 text-center line-clamp-2 group-hover:text-orange-600 transition-colors duration-300">
+                  {movie.tenPhim}
+                </h3>
+              </div>
+            </div>
           );
         })}
       </div>
@@ -247,6 +239,30 @@ const ListMovie = () => {
           )}
         </div>
       </div>
+
+      {/* Modal Trailer */}
+      <Modal
+        title="Xem Trailer"
+        open={isModalOpen}
+        onCancel={closeTrailerModal}
+        footer={null}
+        width={900}
+        centered
+        destroyOnClose
+      >
+        {currentTrailer && (
+          <div className="relative w-full h-0 pb-[56.25%]">
+            <iframe
+              src={getYouTubeEmbedUrl(currentTrailer)}
+              title="Movie Trailer"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute top-0 left-0 w-full h-full"
+            />
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
