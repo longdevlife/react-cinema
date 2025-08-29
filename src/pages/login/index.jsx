@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Form, Input, notification } from "antd";
+import React, { useState } from "react";
+import { Button, Form, Input, Modal, notification } from "antd";
 import { userService } from "../../services/userService";
 import { useDispatch } from "react-redux";
 import { setInfoUserAction } from "../../stores/user";
@@ -12,6 +12,8 @@ import MovieIconAnimation from "../../asset/MovieIcon.json";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onFinish = async (values) => {
     try {
@@ -45,15 +47,16 @@ const LoginPage = () => {
     } catch (error) {
       console.error("Login failed:", error);
 
-      // Thông báo lỗi đăng nhập
-      notification.error({
-        message: "❌ Đăng nhập thất bại",
-        description:
-          "Tài khoản hoặc mật khẩu không đúng. Vui lòng kiểm tra lại thông tin và thử lại.",
-        placement: "topRight",
-        duration: 4,
-      });
+      // Hiển thị Modal thông báo lỗi với lý do từ API
+      const errorContent = error.response?.data?.content || "Tài khoản hoặc mật khẩu không đúng. Vui lòng kiểm tra lại thông tin và thử lại.";
+      setErrorMessage(errorContent);
+      setShowErrorModal(true);
     }
+  };
+
+  const handleErrorModalClose = () => {
+    setShowErrorModal(false);
+    setErrorMessage("");
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -187,6 +190,40 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Error Modal */}
+      <Modal
+        title={
+          <div className="flex items-center text-red-600">
+            <span className="text-2xl mr-2">❌</span>
+            <span className="text-lg font-semibold">Đăng nhập thất bại!</span>
+          </div>
+        }
+        open={showErrorModal}
+        onOk={handleErrorModalClose}
+        onCancel={handleErrorModalClose}
+        footer={[
+          <Button 
+            key="ok" 
+            type="primary" 
+            onClick={handleErrorModalClose}
+            className="bg-red-500 hover:bg-red-600 border-red-500"
+          >
+            Thử lại
+          </Button>
+        ]}
+        centered
+        width={400}
+      >
+        <div className="py-4">
+          <p className="text-gray-700 text-base">
+            <span className="font-medium">Lý do:</span> {errorMessage}
+          </p>
+          <p className="text-gray-600 text-sm mt-2">
+            Vui lòng kiểm tra lại thông tin đăng nhập và thử lại.
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 };
