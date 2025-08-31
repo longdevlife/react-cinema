@@ -12,4 +12,10 @@ export const movieService = {
   getBannerList: async () => {
     return axiosCustom.get("/QuanLyPhim/LayDanhSachBanner");
   },
+
+  addMovieUpload: (formData) => {
+    return axiosCustom.post("/QuanLyPhim/ThemPhimUploadHinh", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
 };

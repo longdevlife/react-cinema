@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DesktopOutlined, UserOutlined } from "@ant-design/icons";
+import { DesktopOutlined, UserOutlined, TeamOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 const { Header, Content, Footer, Sider } = Layout;
@@ -13,9 +13,9 @@ function getItem(label, key, icon, children) {
 }
 const items = [
   getItem(
-    <NavLink to="/admin">Quản Lý User</NavLink>,
+    <NavLink to="/admin">Quản Lý Người Dùng</NavLink>,
     "/admin",
-    <UserOutlined />
+    <TeamOutlined />
   ),
   getItem(
     <NavLink to="/admin/movie">Quản Lý Phim</NavLink>,

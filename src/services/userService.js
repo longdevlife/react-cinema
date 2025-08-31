@@ -19,6 +19,8 @@ export const userService = {
     );
   },
 
+  //admin page
+
   getListUser: () => {
     return axiosCustom.get("/QuanLyNguoiDung/LayDanhSachNguoiDung");
   },
@@ -27,5 +29,15 @@ export const userService = {
     return axiosCustom.delete(
       `/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=${taiKhoan}`
     );
+  },
+
+  // Thêm người dùng mới (admin)
+  addUser: (userData) => {
+    return axiosCustom.post("/QuanLyNguoiDung/ThemNguoiDung", userData);
+  },
+
+  // Cập nhật thông tin người dùng (admin)
+  updateUser: (userData) => {
+    return axiosCustom.put("/QuanLyNguoiDung/CapNhatThongTinNguoiDung", userData);
   },
 };

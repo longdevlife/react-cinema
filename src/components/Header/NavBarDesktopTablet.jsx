@@ -8,6 +8,7 @@ import {
   LoginOutlined,
   UserAddOutlined,
   HistoryOutlined,
+  CrownOutlined,
 } from "@ant-design/icons";
 import { Avatar, Dropdown } from "antd";
 
@@ -48,6 +49,16 @@ const NavBarDesktopTablet = () => {
       icon: <HistoryOutlined />,
       onClick: () => navigate("/ticket-history"),
     },
+    // Chỉ hiển thị menu Quản trị cho user có role QuanTri
+    ...(infoUser?.maLoaiNguoiDung === "QuanTri" 
+      ? [{
+          key: "admin",
+          label: "Quản trị",
+          icon: <CrownOutlined />,
+          onClick: () => navigate("/admin"),
+        }]
+      : []
+    ),
     {
       key: "logout",
       label: "Đăng xuất",

@@ -10,8 +10,8 @@ import HomeTemplate from "../template/HomeTemplate";
 import AuthCheck, { roleUser } from "../HOC/AuthCheck";
 import UserInforPage from "../pages/info-user";
 import AdminTemplate from "../template/AdminTemplate";
-import AdminHomepage from "../pages/admin/home";
 import MovieAdminPage from "../pages/admin/movie";
+import UserManagement from "../pages/admin/user";
 
 const routers = [
   {
@@ -87,7 +87,7 @@ const routers = [
         path: "",
         element: (
           <AuthCheck isNeedLogin={true} pagePermission={roleUser.ADMIN}>
-            <AdminHomepage />
+            <UserManagement />
           </AuthCheck>
         ),
       },

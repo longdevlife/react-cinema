@@ -97,6 +97,18 @@ const NavBarMobile = () => {
               >
                 Lịch sử vé
               </button>
+              {/* Chỉ hiển thị nút Quản trị cho user có role QuanTri */}
+              {infoUser?.maLoaiNguoiDung === "QuanTri" && (
+                <button
+                  onClick={() => {
+                    navigate("/admin");
+                    setOpen(false);
+                  }}
+                  className="w-full px-4 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+                >
+                  👑 Quản trị
+                </button>
+              )}
               <button
                 onClick={handleLogout}
                 className="w-full px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
