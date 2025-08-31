@@ -48,7 +48,9 @@ const LoginPage = () => {
       console.error("Login failed:", error);
 
       // Hiển thị Modal thông báo lỗi với lý do từ API
-      const errorContent = error.response?.data?.content || "Tài khoản hoặc mật khẩu không đúng. Vui lòng kiểm tra lại thông tin và thử lại.";
+      const errorContent =
+        error.response?.data?.content ||
+        "Tài khoản hoặc mật khẩu không đúng. Vui lòng kiểm tra lại thông tin và thử lại.";
       setErrorMessage(errorContent);
       setShowErrorModal(true);
     }
@@ -203,14 +205,14 @@ const LoginPage = () => {
         onOk={handleErrorModalClose}
         onCancel={handleErrorModalClose}
         footer={[
-          <Button 
-            key="ok" 
-            type="primary" 
+          <Button
+            key="ok"
+            type="primary"
             onClick={handleErrorModalClose}
             className="bg-red-500 hover:bg-red-600 border-red-500"
           >
             Thử lại
-          </Button>
+          </Button>,
         ]}
         centered
         width={400}
