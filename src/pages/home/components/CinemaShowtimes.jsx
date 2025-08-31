@@ -129,50 +129,17 @@ const CinemaShowtimes = () => {
         </p>
       </div>
 
-      {/* Date Selector */}
-      <div className="mb-8">
-        <h4 className="text-xl font-bold text-gray-800 mb-4 text-center">
-          Chọn ngày xem phim
-        </h4>
-        <div className="flex gap-2 overflow-x-auto pb-2 justify-center">
-          {getNext7Days().map((date, index) => {
-            const dateInfo = formatDate(date);
-            const isSelected =
-              selectedDate.toDateString() === date.toDateString();
-            const isToday = index === 0;
-
-            return (
-              <button
-                key={index}
-                onClick={() => setSelectedDate(date)}
-                className={`flex-shrink-0 p-4 rounded-2xl border-2 transition-all duration-300 min-w-[80px] ${
-                  isSelected
-                    ? "border-red-500 bg-red-500 text-white shadow-lg transform scale-105"
-                    : "border-gray-200 bg-white hover:border-red-300 hover:bg-red-50"
-                }`}
-              >
-                <div className="text-center">
-                  <div className="text-xs font-medium opacity-80 mb-1">
-                    {isToday ? "Hôm nay" : dateInfo.dayName}
-                  </div>
-                  <div className="text-lg font-bold">{dateInfo.dayNumber}</div>
-                  <div className="text-xs opacity-80">Th{dateInfo.month}</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       {/* Enhanced Layout */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
-        {/* Cinema Systems - Enhanced */}
+        {/* ================================== */}
+        {/* CỘT 1: HỆ THỐNG RẠP (2/12 columns) */}
+        {/* ================================== */}
         <div className="md:col-span-2 order-1">
           <div className="bg-gradient-to-b from-gray-50 to-white rounded-2xl p-6 shadow-lg border border-gray-100 md:h-[800px]">
             <h4 className="font-bold text-lg text-gray-800 mb-6 text-center">
               Hệ thống rạp
             </h4>
-            <div className="flex md:block gap-3 md:space-y-4 h-full overflow-x-auto md:overflow-y-auto scrollbar-hide">
+            <div className="flex md:block gap-3 md:space-y-4 max-h-[700px] overflow-x-auto md:overflow-y-auto scrollbar-hide pb-4">
               {cinemaSystemList.map((cinema, index) => (
                 <button
                   key={cinema.maHeThongRap}
@@ -204,7 +171,9 @@ const CinemaShowtimes = () => {
           </div>
         </div>
 
-        {/* Cinema Complexes - Enhanced */}
+        {/* ================================== */}
+        {/* CỘT 2: CỤM RẠP (4/12 columns)     */}
+        {/* ================================== */}
         <div className="md:col-span-4 order-2">
           <div className="bg-gradient-to-b from-gray-50 to-white rounded-2xl p-6 shadow-lg border border-gray-100 md:h-[800px]">
             <h4 className="font-bold text-lg text-gray-800 mb-6">
@@ -214,7 +183,7 @@ const CinemaShowtimes = () => {
             </h4>
 
             {selectedCinemaSystem ? (
-              <div className="space-y-4 h-full overflow-y-auto scrollbar-hide">
+              <div className="space-y-4 max-h-[700px] overflow-y-auto scrollbar-hide pb-4">
                 {loadingComplex ? (
                   <div className="flex justify-center py-20">
                     <Spin size="large" />
@@ -276,16 +245,18 @@ const CinemaShowtimes = () => {
           </div>
         </div>
 
-        {/* Movie Showtimes - Enhanced */}
-        <div className="md:col-span-6 order-3">
-          <div className="bg-gradient-to-b from-gray-50 to-white rounded-2xl p-6 shadow-lg border border-gray-100 md:h-[800px]">
+        {/* ===================================== */}
+        {/* CỘT 3: PHIM & LỊCH CHIẾU (5/12 cols) */}
+        {/* ===================================== */}
+        <div className="lg:col-span-5 order-3">
+          <div className="bg-gradient-to-b from-gray-50 to-white rounded-2xl p-6 shadow-lg border border-gray-100 h-[820px]">
             <h4 className="font-bold text-lg text-gray-800 mb-6">
-              Lịch chiếu{" "}
+              Phim & Lịch chiếu{" "}
               {selectedCinemaComplex && `- ${selectedCinemaComplex.tenCumRap}`}
             </h4>
 
             {selectedCinemaComplex ? (
-              <div className="space-y-6 h-full overflow-y-auto scrollbar-hide">
+              <div className="space-y-6 max-h-[700px] overflow-y-auto scrollbar-hide pb-4">
                 {(() => {
                   const cinemaData = cinemaShowtimes?.find((cinema) =>
                     cinema.lstCumRap?.some(
@@ -350,34 +321,28 @@ const CinemaShowtimes = () => {
                             <span className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
                               <span className="text-yellow-500">⭐</span>
                               <strong className="text-yellow-700">
-                                {movie.danhGia && !isNaN(movie.danhGia)
-                                  ? Number(movie.danhGia).toFixed(1)
-                                  : "9.5"}
-                                /10
+                                {movie.danhGia || "9.5"}/10
                               </strong>
                             </span>
                             <span className="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold">
                               T16+
                             </span>
-                            <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
-                              124 phút
-                            </span>
                           </div>
 
                           {/* Enhanced Date Display */}
                           <div className="text-sm text-gray-500 mb-4 font-medium bg-gray-100 inline-block px-3 py-1 rounded-full">
-                            📅 {formatDate(selectedDate).fullDate}
+                            📅 {new Date().toLocaleDateString("vi-VN")}
                           </div>
 
                           {/* Enhanced Showtimes Grid */}
-                          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-2 w-">
                             {movie.lstLichChieuTheoPhim &&
                               movie.lstLichChieuTheoPhim
                                 .slice(0, 10)
                                 .map((showtime, showtimeIndex) => (
                                   <button
                                     key={showtime.maLichChieu}
-                                    className="group relative px-4 py-3 bg-gradient-to-r from-white to-gray-50 border-2 border-red-200 text-red-600 text-sm font-bold rounded-xl hover:from-red-500 hover:to-red-600 hover:text-white hover:border-red-500 transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-lg"
+                                    className="group relative w-[50px] h-[44px] flex items-center justify-center bg-gradient-to-r from-white to-gray-50 border-2 border-red-200 text-red-600 text-sm font-bold rounded-xl hover:from-red-500 hover:to-red-600 hover:text-white hover:border-red-500 transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-lg  "
                                     onClick={() =>
                                       navigate(
                                         `/booking/${showtime.maLichChieu}`
@@ -417,33 +382,10 @@ const CinemaShowtimes = () => {
             )}
           </div>
         </div>
+        {/* ===================================== */}
+        {/* KẾT THÚC 3 CỘT GRID LAYOUT          */}
+        {/* ===================================== */}
       </div>
-
-      {/* Quick Stats */}
-      {selectedCinemaSystem && (
-        <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl p-4 shadow-md text-center border border-gray-100">
-            <div className="text-2xl font-bold text-blue-600">
-              {cinemaSystemList.length}
-            </div>
-            <div className="text-sm text-gray-600">Hệ thống rạp</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-md text-center border border-gray-100">
-            <div className="text-2xl font-bold text-green-600">
-              {cinemaComplexList.length}
-            </div>
-            <div className="text-sm text-gray-600">Cụm rạp</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-md text-center border border-gray-100">
-            <div className="text-2xl font-bold text-purple-600">50+</div>
-            <div className="text-sm text-gray-600">Phim hot</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-md text-center border border-gray-100">
-            <div className="text-2xl font-bold text-orange-600">24/7</div>
-            <div className="text-sm text-gray-600">Hỗ trợ</div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

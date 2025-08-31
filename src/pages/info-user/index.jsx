@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -80,11 +80,11 @@ const UserInforPage = () => {
     setErrorMessage("");
   };
 
-  const fetchInfoUser = async () => {
+  const fetchInfoUser = useCallback(async () => {
     try {
       const respone = await userService.getInfoUser();
       console.log("respone", respone);
-      const { email, hoTen, maLoaiNguoiDung, maNhom, matKhau, soDT, taiKhoan } =
+      const { email, hoTen, maLoaiNguoiDung, matKhau, soDT, taiKhoan } =
         respone.data.content;
 
       reset({
@@ -98,11 +98,11 @@ const UserInforPage = () => {
     } catch (error) {
       console.error("Error fetching info user:", error);
     }
-  };
+  }, [reset]);
 
   useEffect(() => {
     fetchInfoUser();
-  }, []);
+  }, [fetchInfoUser]);
 
   return (
     <section className="w-full bg-gradient-to-b from-gray-50 to-white py-12 md:py-16">

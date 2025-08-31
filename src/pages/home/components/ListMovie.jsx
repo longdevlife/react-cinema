@@ -4,11 +4,11 @@ import { setListMovieAction } from "../../../stores/movie";
 import { movieService } from "../../../services/movieService";
 import { Pagination, Modal, Skeleton } from "antd";
 import PlayCircleOutlined from "@ant-design/icons/PlayCircleOutlined";
-import StarOutlined from "@ant-design/icons/StarOutlined";
 import RightOutlined from "@ant-design/icons/RightOutlined";
 import CalendarOutlined from "@ant-design/icons/CalendarOutlined";
 import { useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
+import { StarOutlined } from "@ant-design/icons";
 
 const ListMovie = () => {
   const dispatch = useDispatch();
@@ -162,9 +162,7 @@ const ListMovie = () => {
                 {/* Rating Badge - Enhanced */}
                 <div className="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-3 py-2 rounded-xl text-sm font-bold flex items-center shadow-lg transform transition-all duration-300 group-hover:scale-110">
                   <StarOutlined className="mr-1" />
-                  {movie.danhGia && !isNaN(movie.danhGia)
-                    ? Number(movie.danhGia).toFixed(1)
-                    : "9.5"}
+                  {movie.danhGia ? movie.danhGia.toFixed(1) : "9.5"}
                 </div>
 
                 {/* Age Rating - Enhanced */}

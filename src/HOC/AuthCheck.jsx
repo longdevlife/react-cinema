@@ -9,19 +9,17 @@ export const roleUser = {
 
 const AuthCheck = ({ children, isNeedLogin, pagePermission }) => {
   const { infoUser } = useSelector((state) => state.userSlice);
-
-  // trường hợp mã loại người dùng là admin thì đá về trang admin =>
-
   const location = useLocation();
-  // nếu user là admin và đang ở trang khác ngoài admin thì sẽ chuyển hướng về trang admin , còn nếu đang ở trang admin thì sẽ bỏ qua điều kiện này
+
+  // Chỉ redirect admin về trang admin khi họ truy cập các trang auth (login/register)
   if (
     infoUser?.maLoaiNguoiDung === roleUser.ADMIN &&
-    infoUser &&
-    !location.pathname.startsWith("/admin")
+    (location.pathname === "/login" || location.pathname === "/register")
   ) {
     return <Navigate to="/admin" replace />;
   }
 
+  // Kiểm tra quyền truy cập trang admin
   if (
     infoUser?.maLoaiNguoiDung === roleUser.USER &&
     infoUser &&
@@ -29,6 +27,7 @@ const AuthCheck = ({ children, isNeedLogin, pagePermission }) => {
   ) {
     return <Navigate to="/" replace />;
   }
+
   if (infoUser && !isNeedLogin) {
     //   trường hợp user muốn vào lại trang đăng nhập hoặc đăng ký khi đã login
     return <Navigate to="/" replace />;
