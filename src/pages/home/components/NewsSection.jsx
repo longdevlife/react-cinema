@@ -126,7 +126,7 @@ const NewsSection = () => {
                 </div>
               </div>
             }
-            bodyStyle={{ padding: "20px" }}
+            styles={{ body: { padding: "20px" } }}
           >
             <div className="space-y-3">
               <h3 className="font-bold text-lg line-clamp-2 group-hover:text-red-600 transition-colors duration-300">

@@ -48,10 +48,10 @@ const CinemaShowtimes = () => {
 
   const formatDate = (date) => {
     return {
-      dayName: date.toLocaleDateString('vi-VN', { weekday: 'short' }),
+      dayName: date.toLocaleDateString("vi-VN", { weekday: "short" }),
       dayNumber: date.getDate(),
       month: date.getMonth() + 1,
-      fullDate: date.toLocaleDateString('vi-VN'),
+      fullDate: date.toLocaleDateString("vi-VN"),
     };
   };
 
@@ -67,7 +67,9 @@ const CinemaShowtimes = () => {
   const fetchCinemaComplexList = async (cinemaSystemCode) => {
     dispatch(setLoadingComplexAction(true));
     try {
-      const response = await cinemaService.getCinemaComplexList(cinemaSystemCode);
+      const response = await cinemaService.getCinemaComplexList(
+        cinemaSystemCode
+      );
       dispatch(setCinemaComplexListAction(response.data.content));
     } catch (error) {
       console.error("Error fetching cinema complex list:", error);
@@ -79,7 +81,9 @@ const CinemaShowtimes = () => {
   const fetchCinemaShowtimes = async (cinemaSystem) => {
     dispatch(setLoadingAction(true));
     try {
-      const response = await cinemaService.getCinemaShowtimes(cinemaSystem.maHeThongRap);
+      const response = await cinemaService.getCinemaShowtimes(
+        cinemaSystem.maHeThongRap
+      );
       dispatch(setCinemaShowtimesAction(response.data.content));
       dispatch(setSelectedCinemaSystemAction(cinemaSystem));
       await fetchCinemaComplexList(cinemaSystem.maHeThongRap);
@@ -104,10 +108,12 @@ const CinemaShowtimes = () => {
   }, [cinemaSystemList]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div 
+    <div
       ref={sectionRef}
       className={`max-w-full mx-auto bg-gradient-to-br from-white via-gray-50 to-white rounded-3xl p-8 md:p-12 shadow-2xl min-h-screen transition-all duration-1000 ${
-        inView ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'
+        inView
+          ? "opacity-100 transform translate-y-0"
+          : "opacity-0 transform translate-y-8"
       }`}
     >
       {/* Enhanced Header */}
@@ -125,26 +131,29 @@ const CinemaShowtimes = () => {
 
       {/* Date Selector */}
       <div className="mb-8">
-        <h4 className="text-xl font-bold text-gray-800 mb-4 text-center">Chọn ngày xem phim</h4>
+        <h4 className="text-xl font-bold text-gray-800 mb-4 text-center">
+          Chọn ngày xem phim
+        </h4>
         <div className="flex gap-2 overflow-x-auto pb-2 justify-center">
           {getNext7Days().map((date, index) => {
             const dateInfo = formatDate(date);
-            const isSelected = selectedDate.toDateString() === date.toDateString();
+            const isSelected =
+              selectedDate.toDateString() === date.toDateString();
             const isToday = index === 0;
-            
+
             return (
               <button
                 key={index}
                 onClick={() => setSelectedDate(date)}
                 className={`flex-shrink-0 p-4 rounded-2xl border-2 transition-all duration-300 min-w-[80px] ${
                   isSelected
-                    ? 'border-red-500 bg-red-500 text-white shadow-lg transform scale-105'
-                    : 'border-gray-200 bg-white hover:border-red-300 hover:bg-red-50'
+                    ? "border-red-500 bg-red-500 text-white shadow-lg transform scale-105"
+                    : "border-gray-200 bg-white hover:border-red-300 hover:bg-red-50"
                 }`}
               >
                 <div className="text-center">
                   <div className="text-xs font-medium opacity-80 mb-1">
-                    {isToday ? 'Hôm nay' : dateInfo.dayName}
+                    {isToday ? "Hôm nay" : dateInfo.dayName}
                   </div>
                   <div className="text-lg font-bold">{dateInfo.dayNumber}</div>
                   <div className="text-xs opacity-80">Th{dateInfo.month}</div>
@@ -160,7 +169,9 @@ const CinemaShowtimes = () => {
         {/* Cinema Systems - Enhanced */}
         <div className="md:col-span-2 order-1">
           <div className="bg-gradient-to-b from-gray-50 to-white rounded-2xl p-6 shadow-lg border border-gray-100 md:h-[800px]">
-            <h4 className="font-bold text-lg text-gray-800 mb-6 text-center">Hệ thống rạp</h4>
+            <h4 className="font-bold text-lg text-gray-800 mb-6 text-center">
+              Hệ thống rạp
+            </h4>
             <div className="flex md:block gap-3 md:space-y-4 h-full overflow-x-auto md:overflow-y-auto scrollbar-hide">
               {cinemaSystemList.map((cinema, index) => (
                 <button
@@ -179,9 +190,10 @@ const CinemaShowtimes = () => {
                     className="w-12 h-12 md:w-16 md:h-16 object-contain transition-transform duration-300 group-hover:scale-110"
                     loading="lazy"
                   />
-                  
+
                   {/* Selection Indicator */}
-                  {selectedCinemaSystem?.maHeThongRap === cinema.maHeThongRap && (
+                  {selectedCinemaSystem?.maHeThongRap ===
+                    cinema.maHeThongRap && (
                     <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
                       <div className="w-2 h-2 bg-white rounded-full"></div>
                     </div>
@@ -196,9 +208,11 @@ const CinemaShowtimes = () => {
         <div className="md:col-span-4 order-2">
           <div className="bg-gradient-to-b from-gray-50 to-white rounded-2xl p-6 shadow-lg border border-gray-100 md:h-[800px]">
             <h4 className="font-bold text-lg text-gray-800 mb-6">
-              Cụm rạp {selectedCinemaSystem && `- ${selectedCinemaSystem.tenHeThongRap}`}
+              Cụm rạp{" "}
+              {selectedCinemaSystem &&
+                `- ${selectedCinemaSystem.tenHeThongRap}`}
             </h4>
-            
+
             {selectedCinemaSystem ? (
               <div className="space-y-4 h-full overflow-y-auto scrollbar-hide">
                 {loadingComplex ? (
@@ -214,7 +228,9 @@ const CinemaShowtimes = () => {
                           ? "border-blue-500 bg-blue-50 shadow-lg shadow-blue-500/20"
                           : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-md"
                       }`}
-                      onClick={() => dispatch(setSelectedCinemaComplexAction(complex))}
+                      onClick={() =>
+                        dispatch(setSelectedCinemaComplexAction(complex))
+                      }
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
                       <div className="p-6 text-left">
@@ -224,7 +240,7 @@ const CinemaShowtimes = () => {
                         <p className="text-gray-600 line-clamp-2 leading-relaxed text-sm">
                           {complex.diaChi}
                         </p>
-                        
+
                         {/* Distance indicator (mock) */}
                         <div className="flex items-center gap-2 mt-3 text-xs text-gray-500">
                           <span>📍</span>
@@ -243,7 +259,7 @@ const CinemaShowtimes = () => {
                     </button>
                   ))
                 ) : (
-                  <Empty 
+                  <Empty
                     description="Không có cụm rạp"
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                   />
@@ -252,7 +268,9 @@ const CinemaShowtimes = () => {
             ) : (
               <div className="text-center py-20">
                 <div className="text-6xl mb-4">🎬</div>
-                <p className="text-gray-500 text-lg">Chọn hệ thống rạp để xem cụm rạp</p>
+                <p className="text-gray-500 text-lg">
+                  Chọn hệ thống rạp để xem cụm rạp
+                </p>
               </div>
             )}
           </div>
@@ -262,25 +280,32 @@ const CinemaShowtimes = () => {
         <div className="md:col-span-6 order-3">
           <div className="bg-gradient-to-b from-gray-50 to-white rounded-2xl p-6 shadow-lg border border-gray-100 md:h-[800px]">
             <h4 className="font-bold text-lg text-gray-800 mb-6">
-              Lịch chiếu {selectedCinemaComplex && `- ${selectedCinemaComplex.tenCumRap}`}
+              Lịch chiếu{" "}
+              {selectedCinemaComplex && `- ${selectedCinemaComplex.tenCumRap}`}
             </h4>
-            
+
             {selectedCinemaComplex ? (
               <div className="space-y-6 h-full overflow-y-auto scrollbar-hide">
                 {(() => {
                   const cinemaData = cinemaShowtimes?.find((cinema) =>
                     cinema.lstCumRap?.some(
-                      (cumRap) => cumRap.maCumRap === selectedCinemaComplex.maCumRap
+                      (cumRap) =>
+                        cumRap.maCumRap === selectedCinemaComplex.maCumRap
                     )
                   );
 
                   const cumRapData = cinemaData?.lstCumRap?.find(
-                    (cumRap) => cumRap.maCumRap === selectedCinemaComplex.maCumRap
+                    (cumRap) =>
+                      cumRap.maCumRap === selectedCinemaComplex.maCumRap
                   );
 
-                  if (!cumRapData || !cumRapData.danhSachPhim || cumRapData.danhSachPhim.length === 0) {
+                  if (
+                    !cumRapData ||
+                    !cumRapData.danhSachPhim ||
+                    cumRapData.danhSachPhim.length === 0
+                  ) {
                     return (
-                      <Empty 
+                      <Empty
                         description="Không có lịch chiếu cho cụm rạp này"
                         image={Empty.PRESENTED_IMAGE_SIMPLE}
                       />
@@ -291,7 +316,7 @@ const CinemaShowtimes = () => {
                     <div
                       key={movie.maPhim}
                       className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1 ${
-                        inView ? 'animate-fade-in-up' : 'opacity-0'
+                        inView ? "animate-fade-in-up" : "opacity-0"
                       }`}
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
@@ -306,23 +331,30 @@ const CinemaShowtimes = () => {
                           {/* Quick action overlay */}
                           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl flex items-center justify-center">
                             <button
-                              onClick={() => navigate(`/detail/${movie.maPhim}`)}
+                              onClick={() =>
+                                navigate(`/detail/${movie.maPhim}`)
+                              }
                               className="bg-white/20 backdrop-blur-sm text-white p-2 rounded-full hover:bg-white/30 transition-all duration-200"
                             >
                               <span className="text-lg">👁️</span>
                             </button>
                           </div>
                         </div>
-                        
+
                         <div className="flex-1">
                           <h5 className="font-bold text-gray-800 text-xl line-clamp-2 mb-3 hover:text-red-600 transition-colors cursor-pointer">
                             {movie.tenPhim}
                           </h5>
-                          
+
                           <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                             <span className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
                               <span className="text-yellow-500">⭐</span>
-                              <strong className="text-yellow-700">{movie.danhGia || '9.5'}/10</strong>
+                              <strong className="text-yellow-700">
+                                {movie.danhGia && !isNaN(movie.danhGia)
+                                  ? Number(movie.danhGia).toFixed(1)
+                                  : "9.5"}
+                                /10
+                              </strong>
                             </span>
                             <span className="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-bold">
                               T16+
@@ -346,16 +378,24 @@ const CinemaShowtimes = () => {
                                   <button
                                     key={showtime.maLichChieu}
                                     className="group relative px-4 py-3 bg-gradient-to-r from-white to-gray-50 border-2 border-red-200 text-red-600 text-sm font-bold rounded-xl hover:from-red-500 hover:to-red-600 hover:text-white hover:border-red-500 transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-lg"
-                                    onClick={() => navigate(`/booking/${showtime.maLichChieu}`)}
-                                    style={{ animationDelay: `${showtimeIndex * 50}ms` }}
+                                    onClick={() =>
+                                      navigate(
+                                        `/booking/${showtime.maLichChieu}`
+                                      )
+                                    }
+                                    style={{
+                                      animationDelay: `${showtimeIndex * 50}ms`,
+                                    }}
                                   >
                                     <div className="relative z-10">
-                                      {new Date(showtime.ngayChieuGioChieu).toLocaleTimeString("vi-VN", {
+                                      {new Date(
+                                        showtime.ngayChieuGioChieu
+                                      ).toLocaleTimeString("vi-VN", {
                                         hour: "2-digit",
                                         minute: "2-digit",
                                       })}
                                     </div>
-                                    
+
                                     {/* Hover effect background */}
                                     <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-red-500 opacity-0 group-hover:opacity-20 rounded-xl transition-opacity duration-300"></div>
                                   </button>
@@ -370,7 +410,9 @@ const CinemaShowtimes = () => {
             ) : (
               <div className="text-center py-20">
                 <div className="text-6xl mb-4">🎪</div>
-                <p className="text-gray-500 text-lg">Chọn cụm rạp để xem lịch chiếu</p>
+                <p className="text-gray-500 text-lg">
+                  Chọn cụm rạp để xem lịch chiếu
+                </p>
               </div>
             )}
           </div>
@@ -381,11 +423,15 @@ const CinemaShowtimes = () => {
       {selectedCinemaSystem && (
         <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white rounded-xl p-4 shadow-md text-center border border-gray-100">
-            <div className="text-2xl font-bold text-blue-600">{cinemaSystemList.length}</div>
+            <div className="text-2xl font-bold text-blue-600">
+              {cinemaSystemList.length}
+            </div>
             <div className="text-sm text-gray-600">Hệ thống rạp</div>
           </div>
           <div className="bg-white rounded-xl p-4 shadow-md text-center border border-gray-100">
-            <div className="text-2xl font-bold text-green-600">{cinemaComplexList.length}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {cinemaComplexList.length}
+            </div>
             <div className="text-sm text-gray-600">Cụm rạp</div>
           </div>
           <div className="bg-white rounded-xl p-4 shadow-md text-center border border-gray-100">

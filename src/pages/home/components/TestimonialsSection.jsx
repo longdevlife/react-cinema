@@ -92,7 +92,7 @@ const TestimonialsSection = () => {
           <Card
             key={testimonial.id}
             className="group cursor-pointer border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-gradient-to-br from-white to-gray-50"
-            bodyStyle={{ padding: "24px" }}
+            styles={{ body: { padding: "24px" } }}
           >
             <div className="space-y-4">
               {/* Rating */}

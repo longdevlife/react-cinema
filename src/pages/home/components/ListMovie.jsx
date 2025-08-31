@@ -4,6 +4,9 @@ import { setListMovieAction } from "../../../stores/movie";
 import { movieService } from "../../../services/movieService";
 import { Pagination, Modal, Skeleton } from "antd";
 import PlayCircleOutlined from "@ant-design/icons/PlayCircleOutlined";
+import StarOutlined from "@ant-design/icons/StarOutlined";
+import RightOutlined from "@ant-design/icons/RightOutlined";
+import CalendarOutlined from "@ant-design/icons/CalendarOutlined";
 import { useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 
@@ -71,22 +74,25 @@ const ListMovie = () => {
   const sapChieuMovies = listMovie.filter((movie, index) => index % 2 === 1);
 
   const getCurrentMovies = () => {
-    const movies = activeTab === "dang-chieu" ? dangChieuMovies : sapChieuMovies;
+    const movies =
+      activeTab === "dang-chieu" ? dangChieuMovies : sapChieuMovies;
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     return movies.slice(startIndex, endIndex);
   };
 
   const getTotalMovies = () => {
-    return activeTab === "dang-chieu" ? dangChieuMovies.length : sapChieuMovies.length;
+    return activeTab === "dang-chieu"
+      ? dangChieuMovies.length
+      : sapChieuMovies.length;
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
     // Smooth scroll to movies section
-    const moviesSection = document.getElementById('phim');
+    const moviesSection = document.getElementById("phim");
     if (moviesSection) {
-      moviesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      moviesSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -117,18 +123,18 @@ const ListMovie = () => {
     }
 
     return (
-      <div 
+      <div
         ref={sectionRef}
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-4 md:px-8"
       >
         {movies.map((movie, index) => {
           const isHovered = hoveredMovie === movie.maPhim;
-          
+
           return (
             <div
               key={movie.maPhim}
               className={`movie-card group cursor-pointer relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 bg-white transform hover:-translate-y-3 ${
-                inView ? 'animate-fade-in-up' : 'opacity-0'
+                inView ? "animate-fade-in-up" : "opacity-0"
               }`}
               style={{
                 height: "520px",
@@ -139,7 +145,10 @@ const ListMovie = () => {
               onClick={() => handleRedirectToDetail(movie.maPhim)}
             >
               {/* Movie Poster Container with Enhanced Effects */}
-              <div className="relative overflow-hidden" style={{ height: "400px" }}>
+              <div
+                className="relative overflow-hidden"
+                style={{ height: "400px" }}
+              >
                 <img
                   alt={movie.tenPhim}
                   src={movie.hinhAnh}
@@ -153,7 +162,9 @@ const ListMovie = () => {
                 {/* Rating Badge - Enhanced */}
                 <div className="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-3 py-2 rounded-xl text-sm font-bold flex items-center shadow-lg transform transition-all duration-300 group-hover:scale-110">
                   <StarOutlined className="mr-1" />
-                  {movie.danhGia ? movie.danhGia.toFixed(1) : "9.5"}
+                  {movie.danhGia && !isNaN(movie.danhGia)
+                    ? Number(movie.danhGia).toFixed(1)
+                    : "9.5"}
                 </div>
 
                 {/* Age Rating - Enhanced */}
@@ -206,9 +217,13 @@ const ListMovie = () => {
                 </div>
 
                 {/* Floating Action Button for Quick Booking */}
-                <div className={`absolute bottom-4 right-4 transform transition-all duration-500 ${
-                  isHovered ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                }`}>
+                <div
+                  className={`absolute bottom-4 right-4 transform transition-all duration-500 ${
+                    isHovered
+                      ? "translate-y-0 opacity-100"
+                      : "translate-y-4 opacity-0"
+                  }`}
+                >
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -222,16 +237,21 @@ const ListMovie = () => {
               </div>
 
               {/* Enhanced Movie Info Section */}
-              <div className="p-6 bg-gradient-to-b from-white to-gray-50" style={{ height: "120px" }}>
+              <div
+                className="p-6 bg-gradient-to-b from-white to-gray-50"
+                style={{ height: "120px" }}
+              >
                 <h3 className="font-bold text-lg text-gray-800 text-center line-clamp-2 group-hover:text-red-600 transition-colors duration-300 mb-2">
                   {movie.tenPhim}
                 </h3>
-                
+
                 {/* Additional Movie Info */}
                 <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
                   <span className="flex items-center gap-1">
                     <CalendarOutlined />
-                    {new Date(movie.ngayKhoiChieu).getFullYear()}
+                    {movie.ngayKhoiChieu
+                      ? new Date(movie.ngayKhoiChieu).getFullYear()
+                      : new Date().getFullYear()}
                   </span>
                   <span>•</span>
                   <span>124 phút</span>
@@ -256,11 +276,11 @@ const ListMovie = () => {
         <div className="flex flex-col md:flex-row items-center justify-between mb-8">
           <div className="flex items-center mb-4 md:mb-0">
             <div className="w-2 h-12 bg-gradient-to-b from-red-500 to-purple-600 rounded-full mr-6"></div>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-800 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
               PHIM HOT
             </h2>
           </div>
-          
+
           {/* Enhanced Tab Buttons */}
           <div className="flex items-center bg-gray-100 p-2 rounded-2xl shadow-inner">
             <button
@@ -295,7 +315,8 @@ const ListMovie = () => {
         {/* Movies Count Indicator */}
         <div className="text-center mb-8">
           <p className="text-gray-600 text-lg">
-            <span className="font-bold text-red-600">{getTotalMovies()}</span> phim {activeTab === "dang-chieu" ? "đang chiếu" : "sắp chiếu"}
+            <span className="font-bold text-red-600">{getTotalMovies()}</span>{" "}
+            phim {activeTab === "dang-chieu" ? "đang chiếu" : "sắp chiếu"}
           </p>
         </div>
 
