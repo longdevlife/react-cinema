@@ -50,15 +50,16 @@ const NavBarDesktopTablet = () => {
       onClick: () => navigate("/ticket-history"),
     },
     // Chỉ hiển thị menu Quản trị cho user có role QuanTri
-    ...(infoUser?.maLoaiNguoiDung === "QuanTri" 
-      ? [{
-          key: "admin",
-          label: "Quản trị",
-          icon: <CrownOutlined />,
-          onClick: () => navigate("/admin"),
-        }]
-      : []
-    ),
+    ...(infoUser?.maLoaiNguoiDung === "QuanTri"
+      ? [
+          {
+            key: "admin",
+            label: "Quản trị",
+            icon: <CrownOutlined />,
+            onClick: () => navigate("/admin"),
+          },
+        ]
+      : []),
     {
       key: "logout",
       label: "Đăng xuất",

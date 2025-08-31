@@ -25,6 +25,8 @@ const MovieAdminPage = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingMovie, setEditingMovie] = useState(null);
   const [form] = Form.useForm();
 
   // State cho Modal thông báo
@@ -55,14 +57,56 @@ const MovieAdminPage = () => {
   // Mở Modal thêm phim
   const handleAddMovie = () => {
     form.resetFields();
+    // Set default values cho Switch khi thêm mới
+    form.setFieldsValue({
+      sapChieu: false,
+      dangChieu: false,
+      hot: false,
+      danhGia: 1,
+    });
+    setIsEditMode(false);
+    setEditingMovie(null);
     setIsModalVisible(true);
   };
 
-  // Xử lý submit form
-  const handleSubmit = async (values) => {
+  // Đóng Modal
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setIsEditMode(false);
+    setEditingMovie(null);
+    form.resetFields();
+  };
+
+  // Mở Modal sửa phim
+  const handleEditMovie = (movie) => {
+    setIsEditMode(true);
+    setEditingMovie(movie);
+
+    console.log("Editing movie data:", movie);
+
+    form.setFieldsValue({
+      tenPhim: movie.tenPhim,
+      trailer: movie.trailer,
+      moTa: movie.moTa,
+      ngayKhoiChieu: moment(movie.ngayKhoiChieu, "DD/MM/YYYY"),
+      sapChieu: Boolean(movie.sapChieu),
+      dangChieu: Boolean(movie.dangChieu),
+      hot: Boolean(movie.hot),
+      danhGia: Number(movie.danhGia),
+    });
+    setIsModalVisible(true);
+  };
+
+  // Xử lý submit form (thêm hoặc sửa)
+  const handleSubmitForm = async (values) => {
     try {
-      // Tạo FormData cho upload file
       const formData = new FormData();
+
+      // Nếu là chế độ sửa, thêm mã phim
+      if (isEditMode && editingMovie) {
+        formData.append("maPhim", editingMovie.maPhim);
+      }
+
       formData.append("tenPhim", values.tenPhim);
       formData.append("trailer", values.trailer);
       formData.append("moTa", values.moTa);
@@ -70,36 +114,77 @@ const MovieAdminPage = () => {
         "ngayKhoiChieu",
         values.ngayKhoiChieu.format("DD/MM/YYYY")
       );
-      formData.append("sapChieu", values.sapChieu);
-      formData.append("dangChieu", values.dangChieu);
-      formData.append("hot", values.hot);
+      formData.append("sapChieu", values.sapChieu ? "true" : "false");
+      formData.append("dangChieu", values.dangChieu ? "true" : "false");
+      formData.append("hot", values.hot ? "true" : "false");
       formData.append("danhGia", values.danhGia);
       formData.append("maNhom", "GP01");
 
-      // Thêm file hình ảnh
+      // Thêm file hình ảnh (chỉ khi có file mới)
       if (values.hinhAnh && values.hinhAnh.fileList[0]) {
         formData.append("File", values.hinhAnh.fileList[0].originFileObj);
       }
 
-      await movieService.addMovieUpload(formData);
-      setSuccessMessage("Thêm phim thành công!");
+      // Debug: Log FormData content
+      console.log("FormData content:");
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+      }
+
+      if (isEditMode) {
+        await movieService.updateMovieUpload(formData);
+        setSuccessMessage("Cập nhật phim thành công!");
+      } else {
+        await movieService.addMovieUpload(formData);
+        setSuccessMessage("Thêm phim thành công!");
+      }
+
       setShowSuccessModal(true);
       setIsModalVisible(false);
+      setIsEditMode(false);
+      setEditingMovie(null);
       form.resetFields();
-      fetchMovies(); // Refresh danh sách
+      fetchMovies();
     } catch (error) {
-      console.error("Error adding movie:", error);
+      console.error("Error saving movie:", error);
+      console.error("Error response:", error.response?.data);
+      console.error("Error status:", error.response?.status);
+      console.error("Error headers:", error.response?.headers);
+
       const errorContent =
-        error.response?.data?.content || "Thêm phim thất bại";
-      setErrorMessage(errorContent);
+        error.response?.data?.content ||
+        error.response?.data?.message ||
+        (isEditMode ? "Cập nhật phim thất bại" : "Thêm phim thất bại");
+      setErrorMessage(
+        `Lỗi ${error.response?.status || "Unknown"}: ${errorContent}`
+      );
       setShowErrorModal(true);
     }
   };
 
-  // Đóng Modal
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    form.resetFields();
+  // Xử lý xóa phim
+  const handleDeleteMovie = (movie) => {
+    Modal.confirm({
+      title: "Xác nhận xóa phim",
+      content: `Bạn có chắc chắn muốn xóa phim "${movie.tenPhim}"?`,
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy",
+      onOk: async () => {
+        try {
+          await movieService.deleteMovie(movie.maPhim);
+          setSuccessMessage("Xóa phim thành công!");
+          setShowSuccessModal(true);
+          fetchMovies();
+        } catch (error) {
+          console.error("Error deleting movie:", error);
+          const errorContent =
+            error.response?.data?.content || "Xóa phim thất bại";
+          setErrorMessage(errorContent);
+          setShowErrorModal(true);
+        }
+      },
+    });
   };
 
   // Cấu hình columns cho Table
@@ -128,14 +213,32 @@ const MovieAdminPage = () => {
       title: "Tên phim",
       dataIndex: "tenPhim",
       key: "tenPhim",
+      width: 180,
       sorter: (a, b) => a.tenPhim.localeCompare(b.tenPhim),
     },
     {
       title: "Mô tả",
       dataIndex: "moTa",
       key: "moTa",
-      ellipsis: true,
-      width: 120, // Giảm từ 200 xuống 120
+      width: 300,
+      render: (text) => (
+        <div
+          title={text}
+          style={{
+            maxWidth: 280,
+            wordWrap: "break-word",
+            whiteSpace: "pre-wrap",
+            maxHeight: "60px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {text}
+        </div>
+      ),
     },
     {
       title: "Hành động",
@@ -148,10 +251,17 @@ const MovieAdminPage = () => {
             icon={<EditOutlined />}
             size="small"
             className="bg-blue-500 hover:bg-blue-600"
+            onClick={() => handleEditMovie(record)}
           >
             Sửa
           </Button>
-          <Button type="primary" danger icon={<DeleteOutlined />} size="small">
+          <Button
+            type="primary"
+            danger
+            icon={<DeleteOutlined />}
+            size="small"
+            onClick={() => handleDeleteMovie(record)}
+          >
             Xóa
           </Button>
         </Space>
@@ -189,9 +299,9 @@ const MovieAdminPage = () => {
         />
       </Card>
 
-      {/* Modal Form Thêm Phim */}
+      {/* Modal Form Thêm/Sửa Phim */}
       <Modal
-        title="Thêm phim mới"
+        title={isEditMode ? "Sửa thông tin phim" : "Thêm phim mới"}
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
@@ -201,7 +311,7 @@ const MovieAdminPage = () => {
         <Form
           form={form}
           layout="vertical"
-          onFinish={handleSubmit}
+          onFinish={handleSubmitForm}
           className="mt-4"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -264,7 +374,15 @@ const MovieAdminPage = () => {
           <Form.Item
             label="Hình ảnh"
             name="hinhAnh"
-            rules={[{ required: true, message: "Vui lòng upload hình ảnh!" }]}
+            rules={[
+              {
+                required: !isEditMode,
+                message: "Vui lòng upload hình ảnh!",
+              },
+            ]}
+            extra={
+              isEditMode ? "Để trống nếu không muốn thay đổi hình ảnh" : ""
+            }
           >
             <Upload
               listType="picture"
@@ -311,7 +429,7 @@ const MovieAdminPage = () => {
               htmlType="submit"
               className="bg-green-500 hover:bg-green-600 border-green-500"
             >
-              Thêm phim
+              {isEditMode ? "Cập nhật phim" : "Thêm phim"}
             </Button>
           </div>
         </Form>

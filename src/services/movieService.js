@@ -18,4 +18,14 @@ export const movieService = {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
+
+  updateMovieUpload: (formData) => {
+    return axiosCustom.post("/QuanLyPhim/CapNhatPhimUpload", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+
+  deleteMovie: (movieId) => {
+    return axiosCustom.delete(`/QuanLyPhim/XoaPhim?MaPhim=${movieId}`);
+  },
 };
